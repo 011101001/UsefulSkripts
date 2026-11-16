@@ -1,16 +1,8 @@
-# ============================================================
-# UsefulSkripts - SleepVoting
-# Skip the night when enough players in one world sleep.
-# Requires: Skript 2.10+ and a compatible Minecraft server
-# ============================================================
-
 options:
     required-percent: 50
     cooldown: 10 seconds
     prefix: &8[&9Sleep&8] &7
 
-# Counts online non-spectator players in the bed's world only.
-# No external addons are required.
 on bed enter:
     set {_world} to world of player
     wait 2 ticks

@@ -1,18 +1,7 @@
-# ============================================================
-# UsefulSkripts - CustomCrafting
-# Adds a sample custom shaped recipe through SkBee.
-# Requires: Skript 2.10+ and a compatible Minecraft server; SkBee 3.0+
-# ============================================================
-
 options:
     recipe-id: usefulskripts:name_tag
     recipe-name: &aCrafted Name Tag
 
-# Requires SkBee 3.0+ in addition to Skript.
-# Edit the recipe ID, result, shape and ingredients to customize.
-# Sample recipe: paper above string above an iron ingot -> name tag.
-# Recipe registration runs on load. Players may need to reconnect
-# after a recipe changes for it to appear in their recipe book.
 on load:
     register shaped recipe:
         id: "{@recipe-id}"
