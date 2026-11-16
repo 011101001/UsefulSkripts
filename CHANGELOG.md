@@ -2,6 +2,20 @@
 
 Notable changes to UsefulSkripts are documented here.
 
+## 0.2.0-beta.2 - 2026-11-15
+
+### Fixed
+
+- TreeCapitator no longer silently requires a permission or nearby leaves by default. Added optional permission and leaves checks, plus feedback showing the number of connected logs broken.
+- InventorySorter now sorts only main storage slots 9-35, preserving the full hotbar.
+- PickupFilter now accepts typed item names, such as `/pickupfilter diamond sword`, and supports `list` and `clear`.
+- AutoCompress now counts each resource once and compresses in batches. Automatic mode is triggered by inventory changes instead of a repeating timer.
+- Restored the original Telepathy logic, including recent block tracking and temporary item following when the inventory is full.
+
+### Compatibility note
+
+The restored original Telepathy does not check PickupFilter's blacklist. The two features are independent when Telepathy collects items directly. Disable Telepathy if you need PickupFilter to prevent all pickup of a selected material.
+
 ## 0.2.0-beta.1 - 2026-11-15
 
 ### Added

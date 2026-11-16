@@ -2,7 +2,7 @@
 
 **Lightweight Minecraft Skript utilities for survival servers.** Install the features you want without having to run a complete custom gamemode.
 
-**Version:** 0.2.0-beta.1 | **Scripts:** 19 | **Categories:** 6
+**Version:** 0.2.0-beta.2 | **Scripts:** 19 | **Categories:** 6
 
 ## Features
 
@@ -36,9 +36,9 @@ Each folder includes a short guide and links to its individual scripts.
 Scripts can be installed individually. The following optional integrations work when both corresponding files are present:
 
 - **Telepathy + UniversalFortune:** Direct pickup of Universal Fortune's generated drops.
-- **Telepathy + PickupFilter:** Blacklisted materials remain on the ground instead of entering inventory.
+- **Telepathy + PickupFilter:** The restored original Telepathy uses its own direct item collection and does not check PickupFilter. Disable Telepathy when a pickup blacklist must be enforced.
 - **AutoSmelt + Telepathy:** AutoSmelt processes standard block drops before direct pickup when the handlers run in their intended event order.
-- **AutoCompress + Telepathy:** Periodic resource compression processes inventory items collected while mining.
+- **AutoCompress + Telepathy:** With AutoCompress enabled, inventory-slot changes trigger a single count-based compression pass. No repeating timer is used.
 
 ## Commands
 
@@ -48,10 +48,10 @@ Scripts can be installed individually. The following optional integrations work 
 | `/autosmelt` [on|off]` | Toggle automatic raw ore smelting |
 | `/compress` | Compress eligible materials immediately |
 | `/autocompress` [on|off]` | Toggle periodic inventory compression |
-| `/pickupfilter` | Toggle filtering of the held item material |
+| `/pickupfilter [item]` | Toggle a held material or type a name, such as `diamond sword` |
 | `/autorefill` [on|off]` | Toggle automatic hotbar stack refill |
 | `/itemlock` | Toggle Q-drop protection for the held item material |
-| `/sort` | Sort the 36 main inventory and hotbar slots |
+| `/sort` | Sort only main inventory slots 9-35 and leave the hotbar unchanged |
 | `/deathloc` | Show the last saved death coordinates |
 | `/afk` | Toggle AFK status |
 | `/cleardrops` | Clean up older dropped items with a warning |
@@ -64,7 +64,7 @@ Other features operate automatically or activate when sneaking with the appropri
 | Permission | Feature |
 | --- | --- |
 | `usefulskripts.veinminer` | VeinMiner |
-| `usefulskripts.treecapitator` | TreeCapitator |
+| `usefulskripts.treecapitator` | TreeCapitator, only when `require-permission: true` is enabled |
 | `usefulskripts.harvesthoe` | HarvestHoe |
 | `usefulskripts.admin.cleardrops` | EntityCleanup |
 | `usefulskripts.admin.clearchat` | ChatClear |
@@ -75,11 +75,13 @@ Permissions are not granted by this repository. Assign them through your server'
 
 Each script contains an `options:` section when it has configurable settings. Edit those options, save the file, and reload that script.
 
-- **VeinMiner, TreeCapitator and HarvestHoe** perform additional scripted block breaks. Verify their behavior with claim plugins, protection plugins and tool durability rules.
+- **VeinMiner, TreeCapitator and HarvestHoe** perform additional scripted block breaks. TreeCapitator now works by default while sneaking with an axe, without a permission or leaves requirement. Its `require-permission` and `require-leaves` options can be enabled for stricter use. Verify all three scripts with claim and protection plugins.
 - **UniversalFortune** uses an ore-style multiplier rather than reproducing every vanilla loot table.
-- **AutoCompress** requires space for the resulting storage block before converting inputs.
+- **AutoCompress** counts each eligible material once per pass, converts full groups of nine in a single batch, and checks for output space before removing inputs. `/autocompress` is triggered by inventory changes, not a repeating timer.
 - **AutoReplant and HarvestHoe** replant crops without consuming additional seeds.
 - **AutoRefill and ItemLock** compare material types. They are not full metadata-aware item management systems.
+- **InventorySorter** only touches the three main storage rows, not hotbar, armor or offhand slots.
+- **PickupFilter** accepts item names as text, plus `list` and `clear` subcommands. The original Telepathy can still directly collect items that PickupFilter would otherwise block.
 - **PickupFilter** prevents ordinary ground pickup and is also honored by Telepathy.
 - **CustomCrafting** registers a sample name tag recipe. Change its recipe ID if you add more recipes.
 
