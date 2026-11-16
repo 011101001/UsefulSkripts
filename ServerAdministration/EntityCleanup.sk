@@ -1,17 +1,8 @@
-# ============================================================
-# UsefulSkripts - EntityCleanup
-# Staff-only cleanup of older dropped ground items.
-# Requires: Skript 2.10+ and a compatible Minecraft server
-# ============================================================
-
 options:
     prefix: &8[&6Cleanup&8] &7
     warning-seconds: 10
     minimum-age: 60 seconds
 
-# This is a manual command, not an automatic repeating cleanup.
-# Recently dropped items are exempt. Named entities and mobs
-# are untouched because only dropped item entities are scanned.
 command /cleardrops:
     permission: usefulskripts.admin.cleardrops
     permission message: &cYou do not have permission to use this command.

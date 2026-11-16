@@ -1,15 +1,7 @@
-# ============================================================
-# UsefulSkripts - ChatClear
-# Staff-only chat clearing with an announcement.
-# Requires: Skript 2.10+ and a compatible Minecraft server
-# ============================================================
-
 options:
     prefix: &8[&bChat&8] &7
     blank-lines: 80
 
-# Sends blank chat lines. This only clears visible chat history
-# for connected players; it does not delete logs or stored messages.
 command /clearchat:
     permission: usefulskripts.admin.clearchat
     permission message: &cYou do not have permission to use this command.
