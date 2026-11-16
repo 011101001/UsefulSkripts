@@ -14,7 +14,7 @@ on break:
         stop
     if player's gamemode is creative:
         stop
-    if event-block is not wheat and event-block is not carrots and event-block is not potatoes and event-block is not beetroots:
+    if event-block is not wheat or carrots or potatoes or beetroots:
         stop
     if {@require-sneak} is true:
         if player is not sneaking:
