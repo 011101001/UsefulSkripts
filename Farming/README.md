@@ -1,10 +1,13 @@
 # Farming
 
-Initial script implementations. **Not tested on a live Minecraft server.** Please run `/sk reload <filename>` on a staging server and fix any reported errors before enabling them for players.
+Crop and tree gathering helpers.
 
-## Files
+| Script | Feature | Usage |
+| --- | --- | --- |
+| [TreeCapitator.sk](./TreeCapitator.sk) | Cut connected natural logs | Sneak with an axe; `usefulskripts.treecapitator` |
+| [AutoReplant.sk](./AutoReplant.sk) | Replant mature crops automatically | Automatic |
+| [HarvestHoe.sk](./HarvestHoe.sk) | Break and replant mature nearby crops | Sneak with a hoe; `usefulskripts.harvesthoe` |
 
-- [`TreeCapitator.sk`](./TreeCapitator.sk) - Sneak and chop nearby connected logs with an axe. Permission required; extra tool durability is not spent. Requires Skript 2.10+.
-- [`AutoReplant.sk`](./AutoReplant.sk) - Replants mature wheat, carrots, potatoes, and beetroots for free. Requires Skript 2.10+.
+HarvestHoe replants extra crops without consuming seeds and does not apply extra hoe durability. Scripted block-breaking helpers should be tested with claim and protection plugins.
 
-See [repository README](../README.md) for install and safety notes.
+[Back to the main README](../README.md).

@@ -1,0 +1,54 @@
+# ============================================================
+# UsefulSkripts | HarvestHoe
+# Sneak and harvest mature nearby crops with a hoe.
+#
+# Edit the options below to configure this script.
+# Place this file in plugins/Skript/scripts and reload it.
+# ============================================================
+
+options:
+    radius: 2
+    max-extra-crops: 24
+
+# Permission: usefulskripts.harvesthoe
+# Crops broken in the extra area are replanted for free one tick later.
+# This action does not charge extra hoe durability or consume seeds.
+# Protection-plugin compatibility must be checked before granting access.
+on break:
+    if event is cancelled:
+        stop
+    if player does not have permission "usefulskripts.harvesthoe":
+        stop
+    if player is not sneaking:
+        stop
+    if player's tool is not a hoe:
+        stop
+    if {usefulskripts::harvesthoe::busy::%uuid of player%} is true:
+        stop
+    if event-block is not wheat and event-block is not carrots and event-block is not potatoes and event-block is not beetroots:
+        stop
+    if age of event-block is not maximum age of event-block:
+        stop
+
+    set {_origin} to location of event-block
+    set {usefulskripts::harvesthoe::busy::%uuid of player%} to true
+    set {_count} to 0
+
+    loop blocks in radius {@radius} around {_origin}:
+        if {_count} >= {@max-extra-crops}:
+            stop loop
+        if location of loop-block is not {_origin}:
+            if loop-block is wheat or carrots or potatoes or beetroots:
+                if age of loop-block is maximum age of loop-block:
+                    add 1 to {_count}
+                    set {_loc::%{_count}%} to location of loop-block
+                    set {_kind::%{_count}%} to type of loop-block
+                    break loop-block naturally using player's tool
+
+    wait 1 tick
+    loop {_count} times:
+        set {_loc} to {_loc::%loop-number%}
+        if block at {_loc} is air:
+            set block at {_loc} to {_kind::%loop-number%}
+            set age of block at {_loc} to 0
+    delete {usefulskripts::harvesthoe::busy::%uuid of player%}
