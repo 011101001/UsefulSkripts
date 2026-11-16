@@ -1,25 +1,48 @@
 # ============================================================
-# UsefulSkripts | PickupFilter
-# Ignore unwanted material types when picking up items.
-#
-# Edit the options below to configure this script.
-# Place this file in plugins/Skript/scripts and reload it.
+# UsefulSkripts - PickupFilter
+# Keep selected item types on the ground instead of picking them up.
 # ============================================================
 
 options:
     prefix: &8[&3PickupFilter&8] &7
 
-# Hold an item and use /pickupfilter to blacklist its material type.
-# Use the command again to remove the blacklist entry.
-# Blacklisted drops stay in the world. The filter also integrates with
-# Telepathy.sk using the same per-player material blacklist variable.
-command /pickupfilter:
+# /pickupfilter               - Toggle the material in your hand.
+# /pickupfilter diamond       - Toggle diamonds without holding any.
+# /pickupfilter diamond sword - Toggle diamond swords by typed name.
+# /pickupfilter list          - Show your current blacklist.
+# /pickupfilter clear         - Remove all your blacklist entries.
+#
+# Typed names are checked against Skript item type aliases. Unknown
+# names are rejected and do not create invalid filters.
+command /pickupfilter [<text>]:
     executable by: players
     trigger:
-        if player's tool is air:
-            send "{@prefix}&cHold the item material you want to toggle."
+        if arg-1 is "list":
+            if size of {usefulskripts::pickupfilter::%uuid of player%::*} is 0:
+                send "{@prefix}&eYour pickup filter is empty."
+                stop
+            send "{@prefix}&eBlocked items:"
+            loop {usefulskripts::pickupfilter::%uuid of player%::*}:
+                send "&7- &f%loop-index%"
             stop
-        set {_material} to "%type of player's tool%"
+
+        if arg-1 is "clear":
+            delete {usefulskripts::pickupfilter::%uuid of player%::*}
+            send "{@prefix}&aYour pickup filter was cleared."
+            stop
+
+        if arg-1 is set:
+            set {_parsed} to arg-1 parsed as item type
+            if {_parsed} is not set:
+                send "{@prefix}&cUnknown item. Try /pickupfilter diamond or /pickupfilter diamond sword."
+                stop
+            set {_material} to "%type of {_parsed}%"
+        else:
+            if player's tool is air:
+                send "{@prefix}&eUsage: /pickupfilter <item>, /pickupfilter list, or /pickupfilter clear."
+                stop
+            set {_material} to "%type of player's tool%"
+
         if {usefulskripts::pickupfilter::%uuid of player%::%{_material}%} is true:
             delete {usefulskripts::pickupfilter::%uuid of player%::%{_material}%}
             send "{@prefix}&aPickup allowed: &f%{_material}%"
@@ -27,7 +50,8 @@ command /pickupfilter:
             set {usefulskripts::pickupfilter::%uuid of player%::%{_material}%} to true
             send "{@prefix}&ePickup blocked: &f%{_material}%"
 
-# Player pickup event is cancellable before an item leaves the ground.
+# Blacklisted items remain as physical entities and can still be
+# picked up by other players. This only handles ordinary pickup.
 on player pickup:
     set {_material} to "%type of event-item%"
     if {usefulskripts::pickupfilter::%uuid of player%::%{_material}%} is true:
