@@ -1,0 +1,71 @@
+# ============================================================
+# UsefulSkripts | VeinMiner
+# Sneak-mine a connected vein of matching ore.
+#
+# Edit the options below to configure this script.
+# Place this file in plugins/Skript/scripts and reload it.
+# ============================================================
+
+options:
+    prefix: &8[&bVeinMiner&8] &7
+    max-extra-blocks: 24
+    max-distance: 8
+
+# Permission: usefulskripts.veinminer
+# Extra blocks are broken naturally with the held pickaxe and the
+# tool receives one additional durability point per extra block.
+# Protection plugins must be tested with scripted block breaking.
+# Only the exact ore variant you break is included in the vein.
+on break:
+    if event is cancelled:
+        stop
+    if player's gamemode is creative:
+        stop
+    if player does not have permission "usefulskripts.veinminer":
+        stop
+    if player is not sneaking:
+        stop
+    if player's tool is not a pickaxe:
+        stop
+    if {usefulskripts::veinminer::busy::%uuid of player%} is true:
+        stop
+
+    if event-block is not coal ore and event-block is not deepslate coal ore and event-block is not iron ore and event-block is not deepslate iron ore and event-block is not gold ore and event-block is not deepslate gold ore and event-block is not copper ore and event-block is not deepslate copper ore and event-block is not redstone ore and event-block is not deepslate redstone ore and event-block is not lapis ore and event-block is not deepslate lapis ore and event-block is not diamond ore and event-block is not deepslate diamond ore and event-block is not emerald ore and event-block is not deepslate emerald ore and event-block is not nether gold ore and event-block is not nether quartz ore:
+        stop
+
+    set {_origin} to location of event-block
+    set {_ore} to type of event-block
+    wait 1 tick
+    if block at {_origin} is not air:
+        stop
+
+    set {usefulskripts::veinminer::busy::%uuid of player%} to true
+    set {_queue::1} to {_origin}
+    set {_seen::%{_origin}%} to true
+    set {_head} to 1
+    set {_tail} to 1
+    set {_count} to 0
+
+    # A bounded queue searches adjacent matching blocks.
+    while {_head} <= {_tail}:
+        if {_count} >= {@max-extra-blocks}:
+            stop loop
+        set {_current} to {_queue::%{_head}%}
+        add 1 to {_head}
+        loop blocks in radius 1.75 around {_current}:
+            if type of loop-block is {_ore}:
+                set {_loc} to location of loop-block
+                if distance between {_loc} and {_origin} <= {@max-distance}:
+                    if {_seen::%{_loc}%} is not set:
+                        set {_seen::%{_loc}%} to true
+                        add 1 to {_tail}
+                        set {_queue::%{_tail}%} to {_loc}
+                        if player's tool is not a pickaxe:
+                            stop loop
+                        break loop-block naturally using player's tool
+                        damage player's tool by 1
+                        add 1 to {_count}
+                        if {_count} >= {@max-extra-blocks}:
+                            stop loop
+
+    delete {usefulskripts::veinminer::busy::%uuid of player%}

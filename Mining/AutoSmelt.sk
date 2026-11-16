@@ -1,0 +1,73 @@
+# ============================================================
+# UsefulSkripts | AutoSmelt
+# Convert raw ore drops to ingots when enabled.
+#
+# Edit the options below to configure this script.
+# Place this file in plugins/Skript/scripts and reload it.
+# ============================================================
+
+options:
+    prefix: &8[&6AutoSmelt&8] &7
+
+# Converts raw iron, raw gold and raw copper into matching ingots.
+# No fuel is consumed. Silk Touch ore blocks are not converted.
+# Works on native block drops and scripted UniversalFortune drops.
+command /autosmelt [<text>]:
+    executable by: players
+    trigger:
+        if arg-1 is "on":
+            set {usefulskripts::autosmelt::%uuid of player%} to true
+            send "{@prefix}&aEnabled."
+            stop
+        if arg-1 is "off":
+            delete {usefulskripts::autosmelt::%uuid of player%}
+            send "{@prefix}&cDisabled."
+            stop
+        if arg-1 is set:
+            send "{@prefix}&eUsage: /autosmelt [on|off]"
+            stop
+        if {usefulskripts::autosmelt::%uuid of player%} is true:
+            delete {usefulskripts::autosmelt::%uuid of player%}
+            send "{@prefix}&cDisabled."
+        else:
+            set {usefulskripts::autosmelt::%uuid of player%} to true
+            send "{@prefix}&aEnabled."
+
+# Run before default-priority Telepathy handlers where supported.
+on block drop with priority lowest:
+    if {usefulskripts::autosmelt::%uuid of event-player%} is not true:
+        stop
+    loop event-entities:
+        set {_old} to item of loop-entity
+        set {_amount} to item amount of {_old}
+        if {_old} is raw iron:
+            set {_new} to iron ingot
+        else if {_old} is raw gold:
+            set {_new} to gold ingot
+        else if {_old} is raw copper:
+            set {_new} to copper ingot
+        else:
+            continue
+        set item amount of {_new} to {_amount}
+        set item of loop-entity to {_new}
+
+# UniversalFortune emits item entities with a temporary owner marker.
+# Keep this handler separate from ordinary item spawns and Q-drops.
+on item spawn with priority lowest:
+    if {telepathy::fortune-emitting-player} is not set:
+        stop
+    set {_p} to {telepathy::fortune-emitting-player}
+    if {usefulskripts::autosmelt::%uuid of {_p}%} is not true:
+        stop
+    set {_old} to item of event-entity
+    set {_amount} to item amount of {_old}
+    if {_old} is raw iron:
+        set {_new} to iron ingot
+    else if {_old} is raw gold:
+        set {_new} to gold ingot
+    else if {_old} is raw copper:
+        set {_new} to copper ingot
+    else:
+        stop
+    set item amount of {_new} to {_amount}
+    set item of event-entity to {_new}

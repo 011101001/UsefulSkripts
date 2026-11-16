@@ -1,0 +1,107 @@
+# ============================================================
+# UsefulSkripts | AutoCompress
+# Compress common resources into storage blocks.
+#
+# Edit the options below to configure this script.
+# Place this file in plugins/Skript/scripts and reload it.
+# ============================================================
+
+options:
+    prefix: &8[&eCompress&8] &7
+    interval: 20 seconds
+
+# /compress converts full groups of 9 resources to matching blocks.
+# /autocompress enables the same operation periodically.
+# Normal inventory space and item-stack limits still apply.
+# Special items with custom metadata should be stored separately.
+function us_compress(p: player) :: number:
+    set {_total} to 0
+    loop 256 times:
+        if {_p} has 9 iron ingots:
+            remove 9 iron ingots from {_p}
+            give 1 iron block to {_p}
+            add 1 to {_total}
+        else:
+            stop loop
+    loop 256 times:
+        if {_p} has 9 gold ingots:
+            remove 9 gold ingots from {_p}
+            give 1 gold block to {_p}
+            add 1 to {_total}
+        else:
+            stop loop
+    loop 256 times:
+        if {_p} has 9 copper ingots:
+            remove 9 copper ingots from {_p}
+            give 1 copper block to {_p}
+            add 1 to {_total}
+        else:
+            stop loop
+    loop 256 times:
+        if {_p} has 9 diamonds:
+            remove 9 diamonds from {_p}
+            give 1 diamond block to {_p}
+            add 1 to {_total}
+        else:
+            stop loop
+    loop 256 times:
+        if {_p} has 9 emeralds:
+            remove 9 emeralds from {_p}
+            give 1 emerald block to {_p}
+            add 1 to {_total}
+        else:
+            stop loop
+    loop 256 times:
+        if {_p} has 9 coal:
+            remove 9 coal from {_p}
+            give 1 coal block to {_p}
+            add 1 to {_total}
+        else:
+            stop loop
+    loop 256 times:
+        if {_p} has 9 redstone:
+            remove 9 redstone from {_p}
+            give 1 redstone block to {_p}
+            add 1 to {_total}
+        else:
+            stop loop
+    loop 256 times:
+        if {_p} has 9 lapis lazuli:
+            remove 9 lapis lazuli from {_p}
+            give 1 lapis block to {_p}
+            add 1 to {_total}
+        else:
+            stop loop
+    return {_total}
+
+command /compress:
+    executable by: players
+    trigger:
+        set {_made} to us_compress(player)
+        send "{@prefix}&aMade %{_made}% storage blocks."
+
+command /autocompress [<text>]:
+    executable by: players
+    trigger:
+        if arg-1 is "on":
+            set {usefulskripts::autocompress::%uuid of player%} to true
+            send "{@prefix}&aEnabled."
+            stop
+        if arg-1 is "off":
+            delete {usefulskripts::autocompress::%uuid of player%}
+            send "{@prefix}&cDisabled."
+            stop
+        if arg-1 is set:
+            send "{@prefix}&eUsage: /autocompress [on|off]"
+            stop
+        if {usefulskripts::autocompress::%uuid of player%} is true:
+            delete {usefulskripts::autocompress::%uuid of player%}
+            send "{@prefix}&cDisabled."
+        else:
+            set {usefulskripts::autocompress::%uuid of player%} to true
+            send "{@prefix}&aEnabled."
+
+every {@interval}:
+    loop all players:
+        if {usefulskripts::autocompress::%uuid of loop-player%} is true:
+            us_compress(loop-player)

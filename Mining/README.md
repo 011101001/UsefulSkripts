@@ -1,10 +1,15 @@
 # Mining
 
-Initial script implementations. **Not tested on a live Minecraft server.** Please run `/sk reload <filename>` on a staging server and fix any reported errors before enabling them for players.
+Tools for gathering, processing and storing resources.
 
-## Files
+| Script | Feature | Use |
+| --- | --- | --- |
+| [Telepathy.sk](./Telepathy.sk) | Direct pickup of mined item drops | `/telepathy` |
+| [UniversalFortune.sk](./UniversalFortune.sk) | Custom Fortune multiplier for ordinary blocks | Automatic |
+| [VeinMiner.sk](./VeinMiner.sk) | Sneak-mine connected ores | `usefulskripts.veinminer` permission |
+| [AutoSmelt.sk](./AutoSmelt.sk) | Convert raw ore drops into ingots | `/autosmelt` |
+| [AutoCompress.sk](./AutoCompress.sk) | Convert groups of 9 resources to storage blocks | `/compress`, `/autocompress` |
 
-- [`Telepathy.sk`](./Telepathy.sk) - Directly collects player-owned block drops when room is available. Requires Skript 2.10+.
-- [`UniversalFortune.sk`](./UniversalFortune.sk) - Applies a custom ore-style Fortune multiplier to ordinary drops. Requires Skript 2.10+.
+VeinMiner performs additional scripted block breaks. Confirm land protection behavior in your server configuration before granting its permission. AutoSmelt and Telepathy handle ordinary block drops and UniversalFortune's item spawns. Test the combination with your chosen server version.
 
-See [repository README](../README.md) for install and safety notes.
+[Back to the main README](../README.md).
