@@ -1,7 +1,6 @@
 # ============================================================
 # UsefulSkripts - InventorySorter
 # Sort the 36 player storage and hotbar slots by item type.
-# Status: Initial implementation - not server-tested
 # Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
 
