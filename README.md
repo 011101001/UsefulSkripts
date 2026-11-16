@@ -44,12 +44,12 @@ Scripts can be installed individually. The following optional integrations work 
 
 | Command | Purpose |
 | --- | --- |
-| `/telepathy` [on|off]` | Toggle direct collection of mined drops |
-| `/autosmelt` [on|off]` | Toggle automatic raw ore smelting |
+| `/telepathy` [on|off] | Toggle direct collection of mined drops |
+| `/autosmelt` [on|off] | Toggle automatic raw ore smelting |
 | `/compress` | Compress eligible materials immediately |
-| `/autocompress` [on|off]` | Toggle periodic inventory compression |
+| `/autocompress` [on|off] | Toggle periodic inventory compression |
 | `/pickupfilter [item]` | Toggle a held material or type a name, such as `diamond sword` |
-| `/autorefill` [on|off]` | Toggle automatic hotbar stack refill |
+| `/autorefill` [on|off] | Toggle automatic hotbar stack refill |
 | `/itemlock` | Toggle Q-drop protection for the held item material |
 | `/sort` | Sort only main inventory slots 9-35 and leave the hotbar unchanged |
 | `/deathloc` | Show the last saved death coordinates |
