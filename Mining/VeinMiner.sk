@@ -25,12 +25,12 @@ on break:
         stop
     if player is not sneaking:
         stop
-    if player's tool is not a pickaxe:
+    if player's tool is not wooden pickaxe or stone pickaxe or copper pickaxe or iron pickaxe or golden pickaxe or diamond pickaxe or netherite pickaxe:
         stop
     if {usefulskripts::veinminer::busy::%uuid of player%} is true:
         stop
 
-    if event-block is not coal ore and event-block is not deepslate coal ore and event-block is not iron ore and event-block is not deepslate iron ore and event-block is not gold ore and event-block is not deepslate gold ore and event-block is not copper ore and event-block is not deepslate copper ore and event-block is not redstone ore and event-block is not deepslate redstone ore and event-block is not lapis ore and event-block is not deepslate lapis ore and event-block is not diamond ore and event-block is not deepslate diamond ore and event-block is not emerald ore and event-block is not deepslate emerald ore and event-block is not nether gold ore and event-block is not nether quartz ore:
+    if event-block is not coal ore or deepslate coal ore or iron ore or deepslate iron ore or gold ore or deepslate gold ore or copper ore or deepslate copper ore or redstone ore or deepslate redstone ore or lapis ore or deepslate lapis ore or diamond ore or deepslate diamond ore or emerald ore or deepslate emerald ore or nether gold ore or nether quartz ore:
         stop
 
     set {_origin} to location of event-block
