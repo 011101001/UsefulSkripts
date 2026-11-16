@@ -1,0 +1,143 @@
+# =========================================================
+# TELEPATHY - STANDALONE /telepathy COMMAND
+# =========================================================
+# /telepathy       toggle on/off
+# /telepathy on    enable
+# /telepathy off   disable
+#
+# Reliable pickup: newly spawned mined items go DIRECTLY into the
+# player's inventory when the whole stack fits. This avoids both
+# Minecraft's pickup delay and leaving drops behind while sprinting.
+#
+# If there is insufficient space, the actual item entity is left
+# intact and follows the player briefly, with zero pickup delay.
+# It is never deleted unless the inventory transfer can succeed.
+#
+# The universal_fortune.sk file marks its own spawned drops with
+# {telepathy::fortune-emitting-player}, so they are captured even
+# if normal block-drop location/timing matching doesn't work.
+# No telepathy enchant, pickaxe level, or lore is required.
+# =========================================================
+
+options:
+    telepathy-prefix: &8[&dTelepathy&8] &7
+
+    # How long a just-broken block is eligible for vanilla drops.
+    vanilla-drop-window-ticks: 12
+
+    # Full-inventory item entities follow the miner for this many
+    # iterations, once every 2 ticks (20 = 2 seconds).
+    overflow-follow-iterations: 20
+
+# Do not clear player toggle preferences on reload.
+on load:
+    delete {telepathy::recent::*}
+    delete {telepathy::recent-token::*}
+    delete {telepathy::fortune-emitting-player}
+
+command /telepathy [<text>]:
+    executable by: players
+    trigger:
+        if arg-1 is "on":
+            set {telepathy::enabled::%uuid of player%} to true
+            send "{@telepathy-prefix}&aEnabled! Your mined drops now collect automatically."
+            stop
+
+        if arg-1 is "off":
+            delete {telepathy::enabled::%uuid of player%}
+            send "{@telepathy-prefix}&cDisabled! Your mined drops fall normally."
+            stop
+
+        if arg-1 is not set:
+            if {telepathy::enabled::%uuid of player%} is true:
+                delete {telepathy::enabled::%uuid of player%}
+                send "{@telepathy-prefix}&cDisabled! Your mined drops fall normally."
+            else:
+                set {telepathy::enabled::%uuid of player%} to true
+                send "{@telepathy-prefix}&aEnabled! Your mined drops now collect automatically."
+            stop
+
+        send "{@telepathy-prefix}&eUsage: /telepathy [on|off]"
+
+# Vanilla drops don't tell an item-spawn event which player mined them.
+# Track the mined block for a short period. The custom Fortune script
+# ALSO supplies an exact synchronous owner marker for its own drops.
+on break with priority high:
+    if event is cancelled:
+        stop
+    if player's gamemode is creative:
+        stop
+    if {telepathy::enabled::%uuid of player%} is not true:
+        stop
+
+    set {_key} to "%location of event-block%"
+    add 1 to {telepathy::sequence}
+    set {_token} to {telepathy::sequence}
+    set {telepathy::recent::%{_key}%} to player
+    set {telepathy::recent-token::%{_key}%} to {_token}
+
+    wait {@vanilla-drop-window-ticks} ticks
+    if {telepathy::recent-token::%{_key}%} is {_token}:
+        delete {telepathy::recent::%{_key}%}
+        delete {telepathy::recent-token::%{_key}%}
+
+# Handle only newly-spawned item stacks belonging to an actual break;
+# this does not grab arbitrary old ground loot or dropped Q-key items.
+on item spawn:
+    if {telepathy::fortune-emitting-player} is set:
+        # universal_fortune.sk sets this immediately before `drop`.
+        set {_recipient} to {telepathy::fortune-emitting-player}
+    else:
+        # Vanilla block drop: source block coordinates must match.
+        set {_sourceBlock} to block at location of event-entity
+        set {_key} to "%location of {_sourceBlock}%"
+        set {_recipient} to {telepathy::recent::%{_key}%}
+
+    if {_recipient} is not set:
+        stop
+    if {_recipient} is not online:
+        stop
+    if {telepathy::enabled::%uuid of {_recipient}%} is not true:
+        stop
+
+    set {_itemStack} to item of event-entity
+    if {_itemStack} is air:
+        stop
+
+    # The entire stack can be inserted: cancel the world spawn and give
+    # it directly. Pickup cooldown, player velocity and sprinting cannot
+    # cause missed collections. We only cancel if insertion is possible.
+    if {_recipient} has enough space for {_itemStack}:
+        cancel event
+        give {_itemStack} to {_recipient}
+        stop
+
+    # No sufficient room right now: keep the physical item alive.
+    # If the player makes space soon, collect it without waiting for
+    # the normal pickup distance/cooldown. Otherwise leave it at their
+    # last position, without destroying anything.
+    set {_worldItem} to event-entity
+    wait 1 tick
+
+    loop {@overflow-follow-iterations} times:
+        if {_worldItem} is not valid:
+            stop
+        if {_recipient} is not online:
+            stop
+        if {telepathy::enabled::%uuid of {_recipient}%} is not true:
+            stop
+        if world of {_worldItem} is not world of {_recipient}:
+            stop
+
+        set {_remainingStack} to item of {_worldItem}
+        if {_remainingStack} is air:
+            stop
+
+        if {_recipient} has enough space for {_remainingStack}:
+            kill {_worldItem}
+            give {_remainingStack} to {_recipient}
+            stop
+
+        set pickup delay of {_worldItem} to 0 seconds
+        teleport {_worldItem} to location of {_recipient}
+        wait 2 ticks

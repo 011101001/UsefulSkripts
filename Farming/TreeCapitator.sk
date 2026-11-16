@@ -1,0 +1,12 @@
+# ============================================================
+# TreeCapitator
+# STATUS: PLANNED — NOT IMPLEMENTED
+# PURPOSE: Break connected natural tree logs using a single trunk break.
+# ============================================================
+# This file is a roadmap placeholder, NOT a working Skript.
+# No commands, events, or gameplay changes are implemented yet.
+# TODO:
+# - Implement the core feature safely.
+# - Add configuration, permissions, and helpful messages.
+# - Test on a compatible Skript/Minecraft server.
+# - Document setup and limitations before release.
