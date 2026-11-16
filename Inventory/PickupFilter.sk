@@ -1,0 +1,34 @@
+# ============================================================
+# UsefulSkripts | PickupFilter
+# Ignore unwanted material types when picking up items.
+#
+# Edit the options below to configure this script.
+# Place this file in plugins/Skript/scripts and reload it.
+# ============================================================
+
+options:
+    prefix: &8[&3PickupFilter&8] &7
+
+# Hold an item and use /pickupfilter to blacklist its material type.
+# Use the command again to remove the blacklist entry.
+# Blacklisted drops stay in the world. The filter also integrates with
+# Telepathy.sk using the same per-player material blacklist variable.
+command /pickupfilter:
+    executable by: players
+    trigger:
+        if player's tool is air:
+            send "{@prefix}&cHold the item material you want to toggle."
+            stop
+        set {_material} to "%type of player's tool%"
+        if {usefulskripts::pickupfilter::%uuid of player%::%{_material}%} is true:
+            delete {usefulskripts::pickupfilter::%uuid of player%::%{_material}%}
+            send "{@prefix}&aPickup allowed: &f%{_material}%"
+        else:
+            set {usefulskripts::pickupfilter::%uuid of player%::%{_material}%} to true
+            send "{@prefix}&ePickup blocked: &f%{_material}%"
+
+# Player pickup event is cancellable before an item leaves the ground.
+on player pickup:
+    set {_material} to "%type of event-item%"
+    if {usefulskripts::pickupfilter::%uuid of player%::%{_material}%} is true:
+        cancel event

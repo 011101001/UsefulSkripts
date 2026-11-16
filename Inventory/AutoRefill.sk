@@ -1,0 +1,69 @@
+# ============================================================
+# UsefulSkripts | AutoRefill
+# Refill a depleted hotbar stack from the main inventory.
+#
+# Edit the options below to configure this script.
+# Place this file in plugins/Skript/scripts and reload it.
+# ============================================================
+
+options:
+    prefix: &8[&aAutoRefill&8] &7
+
+# Toggle with /autorefill. Only refills after placing blocks or
+# consuming food. Copies an existing matching material stack from
+# storage slots 9-35 into the vacated hotbar slot.
+# This does not craft or create new items.
+command /autorefill [<text>]:
+    executable by: players
+    trigger:
+        if arg-1 is "on":
+            set {usefulskripts::autorefill::%uuid of player%} to true
+            send "{@prefix}&aEnabled."
+            stop
+        if arg-1 is "off":
+            delete {usefulskripts::autorefill::%uuid of player%}
+            send "{@prefix}&cDisabled."
+            stop
+        if arg-1 is set:
+            send "{@prefix}&eUsage: /autorefill [on|off]"
+            stop
+        if {usefulskripts::autorefill::%uuid of player%} is true:
+            delete {usefulskripts::autorefill::%uuid of player%}
+            send "{@prefix}&cDisabled."
+        else:
+            set {usefulskripts::autorefill::%uuid of player%} to true
+            send "{@prefix}&aEnabled."
+
+function us_refill(p: player, h: number, kind: item type):
+    if slot {_h} of {_p} is not air:
+        stop
+    loop 27 times:
+        set {_i} to loop-number + 8
+        set {_stack} to slot {_i} of {_p}
+        if {_stack} is not air:
+            if type of {_stack} is {_kind}:
+                set slot {_h} of {_p} to {_stack}
+                clear slot {_i} of {_p}
+                stop
+
+on place:
+    if event is cancelled:
+        stop
+    if {usefulskripts::autorefill::%uuid of player%} is not true:
+        stop
+    set {_kind} to type of player's tool
+    set {_h} to index of player's current hotbar slot
+    wait 1 tick
+    if player is online:
+        us_refill(player, {_h}, {_kind})
+
+on consume:
+    if event is cancelled:
+        stop
+    if {usefulskripts::autorefill::%uuid of player%} is not true:
+        stop
+    set {_kind} to type of event-item
+    set {_h} to index of player's current hotbar slot
+    wait 1 tick
+    if player is online:
+        us_refill(player, {_h}, {_kind})

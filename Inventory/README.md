@@ -1,10 +1,14 @@
 # Inventory
 
-Initial script implementations. **Not tested on a live Minecraft server.** Please run `/sk reload <filename>` on a staging server and fix any reported errors before enabling them for players.
+Utilities for handling and organizing items.
 
-## Files
+| Script | Feature | Command |
+| --- | --- | --- |
+| [ItemLock.sk](./ItemLock.sk) | Block Q-dropping selected material types | `/itemlock` |
+| [InventorySorter.sk](./InventorySorter.sk) | Sort player storage slots | `/sort` |
+| [PickupFilter.sk](./PickupFilter.sk) | Blacklist materials from ground pickup | `/pickupfilter` |
+| [AutoRefill.sk](./AutoRefill.sk) | Refill empty hotbar stacks from main storage | `/autorefill` |
 
-- [`ItemLock.sk`](./ItemLock.sk) - Use /itemlock to protect all items of a held material from Q-dropping. Requires Skript 2.10+.
-- [`InventorySorter.sk`](./InventorySorter.sk) - Use /sort to order 36 storage slots by material, without merging stacks. Requires Skript 2.10+.
+PickupFilter protects against normal pickup and is also honored by Telepathy when that integration is enabled. AutoRefill transfers an existing matching stack only when the hotbar slot is empty.
 
-See [repository README](../README.md) for install and safety notes.
+[Back to the main README](../README.md).
