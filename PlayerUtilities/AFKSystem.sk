@@ -1,19 +1,8 @@
-# ============================================================
-# UsefulSkripts | AFKSystem
-# Manual and automatic AFK status for players.
-#
-# Edit the options below to configure this script.
-# Place this file in plugins/Skript/scripts and reload it.
-# ============================================================
-
 options:
     prefix: &8[&7AFK&8] &7
     idle-minutes: 5 minutes
     movement-check-seconds: 10 seconds
 
-# An AFK marker is public and informational only.
-# AFK detection uses low-frequency status polling and throttled
-# movement updates. It does not kick or punish players.
 on join:
     set {usefulskripts::afk::activity::%uuid of player%} to now
     delete {usefulskripts::afk::enabled::%uuid of player%}
@@ -33,7 +22,6 @@ command /afk:
             set {usefulskripts::afk::enabled::%uuid of player%} to true
             broadcast "{@prefix}&f%player% &7is now AFK."
 
-# Rotation alone does not reset AFK. Moving across a block does.
 on player move:
     if {usefulskripts::afk::activity::%uuid of player%} is set:
         if difference between now and {usefulskripts::afk::activity::%uuid of player%} < {@movement-check-seconds}:

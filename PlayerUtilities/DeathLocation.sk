@@ -1,14 +1,6 @@
-# ============================================================
-# UsefulSkripts - DeathLocation
-# Remember each player's last death coordinates.
-# Requires: Skript 2.10+ and a compatible Minecraft server
-# ============================================================
-
 options:
     prefix: &8[&dDeathLoc&8] &7
 
-# The last location persists across reloads and server restarts
-# through Skript's variable storage.
 on death of player:
     set {usefulskripts::deathloc::%uuid of victim%} to location of victim
 
