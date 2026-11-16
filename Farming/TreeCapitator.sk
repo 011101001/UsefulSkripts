@@ -20,9 +20,9 @@ on break:
         stop
     if player is not sneaking:
         stop
-    if player's tool is not an axe:
+    if player's tool is not wooden axe or stone axe or iron axe or golden axe or diamond axe or netherite axe:
         stop
-    if event-block is not oak log and event-block is not spruce log and event-block is not birch log and event-block is not jungle log and event-block is not acacia log and event-block is not dark oak log and event-block is not mangrove log and event-block is not cherry log and event-block is not pale oak log:
+    if event-block is not oak log or spruce log or birch log or jungle log or acacia log or dark oak log or mangrove log or cherry log or pale oak log:
         stop
     if {usefulskripts::treecap::busy::%uuid of player%} is true:
         stop
