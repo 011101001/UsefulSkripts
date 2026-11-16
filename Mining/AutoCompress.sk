@@ -1,104 +1,104 @@
 # ============================================================
-# UsefulSkripts | AutoCompress
-# Compress common resources into storage blocks.
-#
-# Edit the options below to configure this script.
-# Place this file in plugins/Skript/scripts and reload it.
+# UsefulSkripts - AutoCompress
+# Compress groups of nine resources into their storage blocks.
 # ============================================================
 
 options:
     prefix: &8[&eCompress&8] &7
-    interval: 20 seconds
 
-# /compress converts full groups of 9 resources to matching blocks.
-# /autocompress enables the same operation periodically.
-# Skip conversions unless an output block already fits in inventory.
-# This prioritizes safe item handling over fully packed inventories.
-# Special items with custom metadata should be stored separately.
+# /compress performs a one-time conversion.
+# /autocompress toggles conversion when inventory contents change.
+# No repeating timer or 256-iteration loops are used.
+# Each material count is read once, then converted in one batch.
+# Full inventories are handled conservatively: conversion is skipped
+# when there is no room for the output before inputs are removed.
+# Regular material items are expected; special metadata is not checked.
 function us_compress(p: player) :: number:
     set {_total} to 0
-    loop 256 times:
-        if {_p} has 9 iron ingots:
-            # Only convert if the output item fits before removing inputs.
-            if {_p} does not have enough space for 1 iron block:
-                stop loop
-            remove 9 iron ingots from {_p}
-            give 1 iron block to {_p}
-            add 1 to {_total}
-        else:
-            stop loop
-    loop 256 times:
-        if {_p} has 9 gold ingots:
-            # Only convert if the output item fits before removing inputs.
-            if {_p} does not have enough space for 1 gold block:
-                stop loop
-            remove 9 gold ingots from {_p}
-            give 1 gold block to {_p}
-            add 1 to {_total}
-        else:
-            stop loop
-    loop 256 times:
-        if {_p} has 9 copper ingots:
-            # Only convert if the output item fits before removing inputs.
-            if {_p} does not have enough space for 1 copper block:
-                stop loop
-            remove 9 copper ingots from {_p}
-            give 1 copper block to {_p}
-            add 1 to {_total}
-        else:
-            stop loop
-    loop 256 times:
-        if {_p} has 9 diamonds:
-            # Only convert if the output item fits before removing inputs.
-            if {_p} does not have enough space for 1 diamond block:
-                stop loop
-            remove 9 diamonds from {_p}
-            give 1 diamond block to {_p}
-            add 1 to {_total}
-        else:
-            stop loop
-    loop 256 times:
-        if {_p} has 9 emeralds:
-            # Only convert if the output item fits before removing inputs.
-            if {_p} does not have enough space for 1 emerald block:
-                stop loop
-            remove 9 emeralds from {_p}
-            give 1 emerald block to {_p}
-            add 1 to {_total}
-        else:
-            stop loop
-    loop 256 times:
-        if {_p} has 9 coal:
-            # Only convert if the output item fits before removing inputs.
-            if {_p} does not have enough space for 1 coal block:
-                stop loop
-            remove 9 coal from {_p}
-            give 1 coal block to {_p}
-            add 1 to {_total}
-        else:
-            stop loop
-    loop 256 times:
-        if {_p} has 9 redstone:
-            # Only convert if the output item fits before removing inputs.
-            if {_p} does not have enough space for 1 redstone block:
-                stop loop
-            remove 9 redstone from {_p}
-            give 1 redstone block to {_p}
-            add 1 to {_total}
-        else:
-            stop loop
-    loop 256 times:
-        if {_p} has 9 lapis lazuli:
-            # Only convert if the output item fits before removing inputs.
-            if {_p} does not have enough space for 1 lapis block:
-                stop loop
-            remove 9 lapis lazuli from {_p}
-            give 1 lapis block to {_p}
-            add 1 to {_total}
-        else:
-            stop loop
+
+    # iron ingots -> iron block
+    set {_amount} to amount of iron ingots in {_p}'s inventory
+    set {_blocks} to floor({_amount} / 9)
+    if {_blocks} > 0:
+        if {_p} has enough space for {_blocks} iron block:
+            set {_remove} to {_blocks} * 9
+            remove {_remove} iron ingots from {_p}
+            give {_blocks} iron block to {_p}
+            add {_blocks} to {_total}
+
+    # gold ingots -> gold block
+    set {_amount} to amount of gold ingots in {_p}'s inventory
+    set {_blocks} to floor({_amount} / 9)
+    if {_blocks} > 0:
+        if {_p} has enough space for {_blocks} gold block:
+            set {_remove} to {_blocks} * 9
+            remove {_remove} gold ingots from {_p}
+            give {_blocks} gold block to {_p}
+            add {_blocks} to {_total}
+
+    # copper ingots -> copper block
+    set {_amount} to amount of copper ingots in {_p}'s inventory
+    set {_blocks} to floor({_amount} / 9)
+    if {_blocks} > 0:
+        if {_p} has enough space for {_blocks} copper block:
+            set {_remove} to {_blocks} * 9
+            remove {_remove} copper ingots from {_p}
+            give {_blocks} copper block to {_p}
+            add {_blocks} to {_total}
+
+    # diamonds -> diamond block
+    set {_amount} to amount of diamonds in {_p}'s inventory
+    set {_blocks} to floor({_amount} / 9)
+    if {_blocks} > 0:
+        if {_p} has enough space for {_blocks} diamond block:
+            set {_remove} to {_blocks} * 9
+            remove {_remove} diamonds from {_p}
+            give {_blocks} diamond block to {_p}
+            add {_blocks} to {_total}
+
+    # emeralds -> emerald block
+    set {_amount} to amount of emeralds in {_p}'s inventory
+    set {_blocks} to floor({_amount} / 9)
+    if {_blocks} > 0:
+        if {_p} has enough space for {_blocks} emerald block:
+            set {_remove} to {_blocks} * 9
+            remove {_remove} emeralds from {_p}
+            give {_blocks} emerald block to {_p}
+            add {_blocks} to {_total}
+
+    # coal -> coal block
+    set {_amount} to amount of coal in {_p}'s inventory
+    set {_blocks} to floor({_amount} / 9)
+    if {_blocks} > 0:
+        if {_p} has enough space for {_blocks} coal block:
+            set {_remove} to {_blocks} * 9
+            remove {_remove} coal from {_p}
+            give {_blocks} coal block to {_p}
+            add {_blocks} to {_total}
+
+    # redstone -> redstone block
+    set {_amount} to amount of redstone in {_p}'s inventory
+    set {_blocks} to floor({_amount} / 9)
+    if {_blocks} > 0:
+        if {_p} has enough space for {_blocks} redstone block:
+            set {_remove} to {_blocks} * 9
+            remove {_remove} redstone from {_p}
+            give {_blocks} redstone block to {_p}
+            add {_blocks} to {_total}
+
+    # lapis lazuli -> lapis block
+    set {_amount} to amount of lapis lazuli in {_p}'s inventory
+    set {_blocks} to floor({_amount} / 9)
+    if {_blocks} > 0:
+        if {_p} has enough space for {_blocks} lapis block:
+            set {_remove} to {_blocks} * 9
+            remove {_remove} lapis lazuli from {_p}
+            give {_blocks} lapis block to {_p}
+            add {_blocks} to {_total}
+
     return {_total}
 
+# A manual one-time conversion, independent of the auto toggle.
 command /compress:
     executable by: players
     trigger:
@@ -110,7 +110,8 @@ command /autocompress [<text>]:
     trigger:
         if arg-1 is "on":
             set {usefulskripts::autocompress::%uuid of player%} to true
-            send "{@prefix}&aEnabled."
+            set {_made} to us_compress(player)
+            send "{@prefix}&aEnabled. Made %{_made}% storage blocks."
             stop
         if arg-1 is "off":
             delete {usefulskripts::autocompress::%uuid of player%}
@@ -124,9 +125,20 @@ command /autocompress [<text>]:
             send "{@prefix}&cDisabled."
         else:
             set {usefulskripts::autocompress::%uuid of player%} to true
-            send "{@prefix}&aEnabled."
+            set {_made} to us_compress(player)
+            send "{@prefix}&aEnabled. Made %{_made}% storage blocks."
 
-every {@interval}:
-    loop all players:
-        if {usefulskripts::autocompress::%uuid of loop-player%} is true:
-            us_compress(loop-player)
+# Avoid recursive conversions when changing inventory slots.
+on load:
+    delete {usefulskripts::autocompress::busy::*}
+
+on inventory slot change:
+    if {usefulskripts::autocompress::%uuid of player%} is not true:
+        stop
+    if {usefulskripts::autocompress::busy::%uuid of player%} is true:
+        stop
+    set {usefulskripts::autocompress::busy::%uuid of player%} to true
+    wait 1 tick
+    if player is online:
+        us_compress(player)
+    delete {usefulskripts::autocompress::busy::%uuid of player%}
