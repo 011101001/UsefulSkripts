@@ -1,21 +1,8 @@
-# ============================================================
-# UsefulSkripts | VeinMiner
-# Sneak-mine a connected vein of matching ore.
-#
-# Edit the options below to configure this script.
-# Place this file in plugins/Skript/scripts and reload it.
-# ============================================================
-
 options:
     prefix: &8[&bVeinMiner&8] &7
     max-extra-blocks: 24
     max-distance: 8
 
-# Permission: usefulskripts.veinminer
-# Extra blocks are broken naturally with the held pickaxe and the
-# tool receives one additional durability point per extra block.
-# Protection plugins must be tested with scripted block breaking.
-# Only the exact ore variant you break is included in the vein.
 on break:
     if event is cancelled:
         stop
@@ -46,7 +33,6 @@ on break:
     set {_tail} to 1
     set {_count} to 0
 
-    # A bounded queue searches adjacent matching blocks.
     while {_head} <= {_tail}:
         if {_count} >= {@max-extra-blocks}:
             stop loop

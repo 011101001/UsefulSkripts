@@ -1,22 +1,9 @@
-# ============================================================
-# UsefulSkripts - AutoCompress
-# Compress groups of nine resources into their storage blocks.
-# ============================================================
-
 options:
     prefix: &8[&eCompress&8] &7
 
-# /compress performs a one-time conversion.
-# /autocompress toggles conversion when inventory contents change.
-# No repeating timer or 256-iteration loops are used.
-# Each material count is read once, then converted in one batch.
-# Full inventories are handled conservatively: conversion is skipped
-# when there is no room for the output before inputs are removed.
-# Regular material items are expected; special metadata is not checked.
 function us_compress(p: player) :: number:
     set {_total} to 0
 
-    # iron ingots -> iron block
     set {_amount} to amount of iron ingots in {_p}'s inventory
     set {_blocks} to floor({_amount} / 9)
     if {_blocks} > 0:
@@ -26,7 +13,6 @@ function us_compress(p: player) :: number:
             give {_blocks} iron block to {_p}
             add {_blocks} to {_total}
 
-    # gold ingots -> gold block
     set {_amount} to amount of gold ingots in {_p}'s inventory
     set {_blocks} to floor({_amount} / 9)
     if {_blocks} > 0:
@@ -36,7 +22,6 @@ function us_compress(p: player) :: number:
             give {_blocks} gold block to {_p}
             add {_blocks} to {_total}
 
-    # copper ingots -> copper block
     set {_amount} to amount of copper ingots in {_p}'s inventory
     set {_blocks} to floor({_amount} / 9)
     if {_blocks} > 0:
@@ -46,7 +31,6 @@ function us_compress(p: player) :: number:
             give {_blocks} copper block to {_p}
             add {_blocks} to {_total}
 
-    # diamonds -> diamond block
     set {_amount} to amount of diamonds in {_p}'s inventory
     set {_blocks} to floor({_amount} / 9)
     if {_blocks} > 0:
@@ -56,7 +40,6 @@ function us_compress(p: player) :: number:
             give {_blocks} diamond block to {_p}
             add {_blocks} to {_total}
 
-    # emeralds -> emerald block
     set {_amount} to amount of emeralds in {_p}'s inventory
     set {_blocks} to floor({_amount} / 9)
     if {_blocks} > 0:
@@ -66,7 +49,6 @@ function us_compress(p: player) :: number:
             give {_blocks} emerald block to {_p}
             add {_blocks} to {_total}
 
-    # coal -> coal block
     set {_amount} to amount of coal in {_p}'s inventory
     set {_blocks} to floor({_amount} / 9)
     if {_blocks} > 0:
@@ -76,7 +58,6 @@ function us_compress(p: player) :: number:
             give {_blocks} coal block to {_p}
             add {_blocks} to {_total}
 
-    # redstone -> redstone block
     set {_amount} to amount of redstone in {_p}'s inventory
     set {_blocks} to floor({_amount} / 9)
     if {_blocks} > 0:
@@ -86,7 +67,6 @@ function us_compress(p: player) :: number:
             give {_blocks} redstone block to {_p}
             add {_blocks} to {_total}
 
-    # lapis lazuli -> lapis block
     set {_amount} to amount of lapis lazuli in {_p}'s inventory
     set {_blocks} to floor({_amount} / 9)
     if {_blocks} > 0:
@@ -98,7 +78,6 @@ function us_compress(p: player) :: number:
 
     return {_total}
 
-# A manual one-time conversion, independent of the auto toggle.
 command /compress:
     executable by: players
     trigger:
@@ -128,7 +107,6 @@ command /autocompress [<text>]:
             set {_made} to us_compress(player)
             send "{@prefix}&aEnabled. Made %{_made}% storage blocks."
 
-# Avoid recursive conversions when changing inventory slots.
 on load:
     delete {usefulskripts::autocompress::busy::*}
 

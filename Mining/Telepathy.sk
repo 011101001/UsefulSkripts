@@ -1,20 +1,10 @@
-# =========================================================
-# UsefulSkripts - Telepathy
-# Newly spawned mined items go DIRECTLY into the
-# player's inventory when the whole stack fits.
-# =========================================================
-
 options:
     telepathy-prefix: &8[&dTelepathy&8] &7
 
-    # How long a just-broken block is eligible for vanilla drops.
     vanilla-drop-window-ticks: 12
 
-    # Full-inventory item entities follow the miner for this many
-    # iterations, once every 2 ticks (20 = 2 seconds).
     overflow-follow-iterations: 20
 
-# Do not clear player toggle preferences on reload.
 on load:
     delete {telepathy::recent::*}
     delete {telepathy::recent-token::*}
@@ -44,9 +34,6 @@ command /telepathy [<text>]:
 
         send "{@telepathy-prefix}&eUsage: /telepathy [on|off]"
 
-# Vanilla drops don't tell an item-spawn event which player mined them.
-# Track the mined block for a short period. The custom Fortune script
-# ALSO supplies an exact synchronous owner marker for its own drops.
 on break with priority high:
     if event is cancelled:
         stop
@@ -66,14 +53,10 @@ on break with priority high:
         delete {telepathy::recent::%{_key}%}
         delete {telepathy::recent-token::%{_key}%}
 
-# Handle only newly-spawned item stacks belonging to an actual break;
-# this does not grab arbitrary old ground loot or dropped Q-key items.
 on item spawn:
     if {telepathy::fortune-emitting-player} is set:
-        # universal_fortune.sk sets this immediately before `drop`.
         set {_recipient} to {telepathy::fortune-emitting-player}
     else:
-        # Vanilla block drop: source block coordinates must match.
         set {_sourceBlock} to block at location of event-entity
         set {_key} to "%location of {_sourceBlock}%"
         set {_recipient} to {telepathy::recent::%{_key}%}
@@ -89,18 +72,11 @@ on item spawn:
     if {_itemStack} is air:
         stop
 
-    # The entire stack can be inserted: cancel the world spawn and give
-    # it directly. Pickup cooldown, player velocity and sprinting cannot
-    # cause missed collections. We only cancel if insertion is possible.
     if {_recipient} has enough space for {_itemStack}:
         cancel event
         give {_itemStack} to {_recipient}
         stop
 
-    # No sufficient room right now: keep the physical item alive.
-    # If the player makes space soon, collect it without waiting for
-    # the normal pickup distance/cooldown. Otherwise leave it at their
-    # last position, without destroying anything.
     set {_worldItem} to event-entity
     wait 1 tick
 
