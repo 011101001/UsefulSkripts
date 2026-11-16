@@ -1,58 +1,76 @@
 # ============================================================
 # UsefulSkripts - TreeCapitator
-# Sneak and break a log with an axe to cut connected logs.
-# Requires: Skript 2.10+ and a compatible Minecraft server
+# Sneak and break a log with an axe to chop connected logs.
 # ============================================================
 
 options:
     max-extra-logs: 48
     max-distance: 9
+    require-permission: false
+    require-leaves: false
+    show-summary: true
+    prefix: &8[&6TreeCapitator&8] &7
 
-# Permission is required because scripted block breaking may not
-# respect every land-protection plugin. Only grant it where safe.
-# This feature does not consume extra axe durability.
+# Sneak with an axe to activate. Logs must be directly connected
+# and the same type as the original log. Only a bounded area is scanned.
+#
+# By default there is no permission or leaves requirement, so the
+# feature works on ordinary logs without extra setup.
+#
+# For protected servers set require-permission to true and give players
+# usefulskripts.treecapitator. Scripted breaks may bypass some claim
+# plugins, so test the integration before enabling public access.
+#
+# Additional axe durability is not consumed by this script.
 on break:
     if event is cancelled:
         stop
     if player's gamemode is creative:
         stop
-    if player does not have permission "usefulskripts.treecapitator":
-        stop
     if player is not sneaking:
         stop
+    if {@require-permission} is true:
+        if player does not have permission "usefulskripts.treecapitator":
+            stop
     if player's tool is not wooden axe or stone axe or copper axe or iron axe or golden axe or diamond axe or netherite axe:
-        stop
-    if event-block is not oak log or spruce log or birch log or jungle log or acacia log or dark oak log or mangrove log or cherry log or pale oak log:
         stop
     if {usefulskripts::treecap::busy::%uuid of player%} is true:
         stop
 
-    set {_origin} to location of event-block
-    set {_kind} to type of event-block
-
-    # Requiring nearby leaves reduces accidental damage to wooden builds.
-    set {_leaves} to false
-    loop blocks in radius 4 around {_origin}:
-        if "%type of loop-block%" contains "leaves":
-            set {_leaves} to true
-            stop loop
-    if {_leaves} is false:
+    # Only support the regular Overworld log types.
+    if event-block is oak log or spruce log or birch log or jungle log or acacia log or dark oak log or mangrove log or cherry log or pale oak log:
+        set {_kind} to type of event-block
+    else:
         stop
 
-    # Respect a cancelled original block break as far as possible.
+    set {_origin} to location of event-block
+
+    if {@require-leaves} is true:
+        set {_leaves} to false
+        loop blocks in radius 4 around {_origin}:
+            if "%type of loop-block%" contains "leaves":
+                set {_leaves} to true
+                stop loop
+        if {_leaves} is false:
+            stop
+
+    # Run after vanilla finishes the first break. A cancelled or
+    # protected original block is not followed by extra breaks.
     wait 1 tick
     if block at {_origin} is not air:
+        stop
+    if player is not online:
         stop
 
     set {usefulskripts::treecap::busy::%uuid of player%} to true
     set {_queue::1} to {_origin}
+    set {_seen::%{_origin}%} to true
     set {_head} to 1
     set {_tail} to 1
     set {_count} to 0
-    set {_seen::%{_origin}%} to true
 
-    # Bounded breadth-first scan. Only directly connected matching logs
-    # are broken; the distance and count settings limit the work.
+    # Scan the six faces and diagonals in a small radius, extending
+    # from the original log through each connected matching log.
     while {_head} <= {_tail}:
         if {_count} >= {@max-extra-logs}:
             stop loop
@@ -72,3 +90,8 @@ on break:
                             stop loop
 
     delete {usefulskripts::treecap::busy::%uuid of player%}
+    if {@show-summary} is true:
+        if {_count} > 0:
+            send "{@prefix}&aChopped %{_count}% additional logs."
+        else:
+            send "{@prefix}&eNo connected %{_kind}% logs found."
