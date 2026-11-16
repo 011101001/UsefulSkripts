@@ -1,7 +1,6 @@
 # ============================================================
 # UsefulSkripts - Telepathy
 # Collect mined item drops directly into player inventory when space permits.
-# Status: Initial implementation - not server-tested
 # Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
 
@@ -10,7 +9,7 @@ options:
 
 # /telepathy [on|off] toggles the feature for each player.
 # The preference survives script reloads and restarts.
-# Skript 2.10+ has a block drop event with an exact breaking player.
+# Uses the native block-drop event to identify the breaking player.
 # This avoids guessing drop ownership from spawn coordinates.
 command /telepathy [<text>]:
     executable by: players
@@ -44,6 +43,9 @@ on block drop:
     loop event-entities:
         set {_stack} to item of loop-entity
         if {_stack} is not air:
+            set {_material} to "%type of {_stack}%"
+            if {usefulskripts::pickupfilter::%uuid of event-player%::%{_material}%} is true:
+                continue
             if event-player has enough space for {_stack}:
                 kill loop-entity
                 give {_stack} to event-player
@@ -61,6 +63,9 @@ on item spawn:
         stop
     set {_stack} to item of event-entity
     if {_stack} is air:
+        stop
+    set {_material} to "%type of {_stack}%"
+    if {usefulskripts::pickupfilter::%uuid of {_recipient}%::%{_material}%} is true:
         stop
     if {_recipient} has enough space for {_stack}:
         cancel event

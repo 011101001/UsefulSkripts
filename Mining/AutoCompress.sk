@@ -12,12 +12,16 @@ options:
 
 # /compress converts full groups of 9 resources to matching blocks.
 # /autocompress enables the same operation periodically.
-# Normal inventory space and item-stack limits still apply.
+# Skip conversions unless an output block already fits in inventory.
+# This prioritizes safe item handling over fully packed inventories.
 # Special items with custom metadata should be stored separately.
 function us_compress(p: player) :: number:
     set {_total} to 0
     loop 256 times:
         if {_p} has 9 iron ingots:
+            # Only convert if the output item fits before removing inputs.
+            if {_p} does not have enough space for 1 iron block:
+                stop loop
             remove 9 iron ingots from {_p}
             give 1 iron block to {_p}
             add 1 to {_total}
@@ -25,6 +29,9 @@ function us_compress(p: player) :: number:
             stop loop
     loop 256 times:
         if {_p} has 9 gold ingots:
+            # Only convert if the output item fits before removing inputs.
+            if {_p} does not have enough space for 1 gold block:
+                stop loop
             remove 9 gold ingots from {_p}
             give 1 gold block to {_p}
             add 1 to {_total}
@@ -32,6 +39,9 @@ function us_compress(p: player) :: number:
             stop loop
     loop 256 times:
         if {_p} has 9 copper ingots:
+            # Only convert if the output item fits before removing inputs.
+            if {_p} does not have enough space for 1 copper block:
+                stop loop
             remove 9 copper ingots from {_p}
             give 1 copper block to {_p}
             add 1 to {_total}
@@ -39,6 +49,9 @@ function us_compress(p: player) :: number:
             stop loop
     loop 256 times:
         if {_p} has 9 diamonds:
+            # Only convert if the output item fits before removing inputs.
+            if {_p} does not have enough space for 1 diamond block:
+                stop loop
             remove 9 diamonds from {_p}
             give 1 diamond block to {_p}
             add 1 to {_total}
@@ -46,6 +59,9 @@ function us_compress(p: player) :: number:
             stop loop
     loop 256 times:
         if {_p} has 9 emeralds:
+            # Only convert if the output item fits before removing inputs.
+            if {_p} does not have enough space for 1 emerald block:
+                stop loop
             remove 9 emeralds from {_p}
             give 1 emerald block to {_p}
             add 1 to {_total}
@@ -53,6 +69,9 @@ function us_compress(p: player) :: number:
             stop loop
     loop 256 times:
         if {_p} has 9 coal:
+            # Only convert if the output item fits before removing inputs.
+            if {_p} does not have enough space for 1 coal block:
+                stop loop
             remove 9 coal from {_p}
             give 1 coal block to {_p}
             add 1 to {_total}
@@ -60,6 +79,9 @@ function us_compress(p: player) :: number:
             stop loop
     loop 256 times:
         if {_p} has 9 redstone:
+            # Only convert if the output item fits before removing inputs.
+            if {_p} does not have enough space for 1 redstone block:
+                stop loop
             remove 9 redstone from {_p}
             give 1 redstone block to {_p}
             add 1 to {_total}
@@ -67,6 +89,9 @@ function us_compress(p: player) :: number:
             stop loop
     loop 256 times:
         if {_p} has 9 lapis lazuli:
+            # Only convert if the output item fits before removing inputs.
+            if {_p} does not have enough space for 1 lapis block:
+                stop loop
             remove 9 lapis lazuli from {_p}
             give 1 lapis block to {_p}
             add 1 to {_total}
