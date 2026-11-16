@@ -2,17 +2,6 @@
 # UsefulSkripts - Universal Fortune
 # Adds an ore-style Fortune multiplier to ordinary block drops.
 # Requires: Skript 2.10+ and compatible server
-#
-# - Applies to actual Fortune enchants on held tools.
-# - Silk Touch continues to use vanilla drops.
-# - Normal drops are simulated with Fortune removed, then multiplied.
-# - Ore-style scaling does NOT reproduce every vanilla loot table.
-# - Container and special block entities are excluded to reduce risk.
-# - Experience drops are not changed.
-# - Telepathy.sk detects scripted Fortune item spawns via a short-lived
-#   owner marker; the Fortune script also works alone.
-# - Optional legacy setting: {mining::config::fortune-max}.
-# - Test in a disposable world before enabling on a live server.
 # ============================================================
 
 on break with priority highest:
