@@ -1,12 +1,20 @@
 # ============================================================
-# ChatClear
-# STATUS: PLANNED — NOT IMPLEMENTED
-# PURPOSE: Allow authorized staff to clear public chat.
+# UsefulSkripts - ChatClear
+# Staff-only chat clearing with an announcement.
+# Status: Initial implementation - not server-tested
+# Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
-# This file is a roadmap placeholder, NOT a working Skript.
-# No commands, events, or gameplay changes are implemented yet.
-# TODO:
-# - Implement the core feature safely.
-# - Add configuration, permissions, and helpful messages.
-# - Test on a compatible Skript/Minecraft server.
-# - Document setup and limitations before release.
+
+options:
+    prefix: &8[&bChat&8] &7
+    blank-lines: 80
+
+# Sends blank chat lines. This only clears visible chat history
+# for connected players; it does not delete logs or stored messages.
+command /clearchat:
+    permission: usefulskripts.admin.clearchat
+    permission message: &cYou do not have permission to use this command.
+    trigger:
+        loop {@blank-lines} times:
+            broadcast " "
+        broadcast "{@prefix}&aChat was cleared by &f%sender%&a."

@@ -1,8 +1,10 @@
-# Gameplay Skripts
+# Gameplay
 
-## Starting lineup
+Initial script implementations. **Not tested on a live Minecraft server.** Please run `/sk reload <filename>` on a staging server and fix any reported errors before enabling them for players.
 
-- **[`SleepVoting.sk`](./SleepVoting.sk)** — Skip the night when enough players are sleeping. **Planned.**
-- **[`CustomCrafting.sk`](./CustomCrafting.sk)** — Add configurable crafting recipes. **Planned.**
+## Files
 
-> **Status note:** Planned .sk files are intentionally comment-only placeholders, not functioning Skripts.
+- [`SleepVoting.sk`](./SleepVoting.sk) - Skips the night when enough players in the same world sleep. Requires Skript 2.10+.
+- [`CustomCrafting.sk`](./CustomCrafting.sk) - Registers an editable sample name tag recipe using SkBee. Requires Skript 2.10+ and SkBee 3.0+.
+
+See [repository README](../README.md) for install and safety notes.

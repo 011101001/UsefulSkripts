@@ -1,12 +1,31 @@
 # ============================================================
-# AutoReplant
-# STATUS: PLANNED — NOT IMPLEMENTED
-# PURPOSE: Automatically replant fully grown crops after harvest.
+# UsefulSkripts - AutoReplant
+# Replants mature wheat, carrots, potatoes and beetroots after harvest.
+# Status: Initial implementation - not server-tested
+# Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
-# This file is a roadmap placeholder, NOT a working Skript.
-# No commands, events, or gameplay changes are implemented yet.
-# TODO:
-# - Implement the core feature safely.
-# - Add configuration, permissions, and helpful messages.
-# - Test on a compatible Skript/Minecraft server.
-# - Document setup and limitations before release.
+
+options:
+    require-sneak: false
+
+# Replanting is free. Vanilla harvest drops are unchanged.
+# The new plant is placed only if the broken location remains air.
+on break:
+    if event is cancelled:
+        stop
+    if player's gamemode is creative:
+        stop
+    if event-block is not wheat and event-block is not carrots and event-block is not potatoes and event-block is not beetroots:
+        stop
+    if {@require-sneak} is true:
+        if player is not sneaking:
+            stop
+    if age of event-block is not maximum age of event-block:
+        stop
+
+    set {_plant} to type of event-block
+    set {_where} to location of event-block
+    wait 1 tick
+    if block at {_where} is air:
+        set block at {_where} to {_plant}
+        set age of block at {_where} to 0

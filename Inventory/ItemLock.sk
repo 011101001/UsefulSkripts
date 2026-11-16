@@ -1,12 +1,32 @@
 # ============================================================
-# ItemLock
-# STATUS: PLANNED — NOT IMPLEMENTED
-# PURPOSE: Prevent players from accidentally dropping protected items.
+# UsefulSkripts - ItemLock
+# Lock or unlock dropping items by material for each player.
+# Status: Initial implementation - not server-tested
+# Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
-# This file is a roadmap placeholder, NOT a working Skript.
-# No commands, events, or gameplay changes are implemented yet.
-# TODO:
-# - Implement the core feature safely.
-# - Add configuration, permissions, and helpful messages.
-# - Test on a compatible Skript/Minecraft server.
-# - Document setup and limitations before release.
+
+options:
+    prefix: &8[&6ItemLock&8] &7
+
+# /itemlock toggles protection for the held material, not one exact
+# item stack. All items of that material are protected from Q-dropping.
+# Inventory moves, death drops and external plugin removals are not blocked.
+command /itemlock:
+    executable by: players
+    trigger:
+        if player's tool is air:
+            send "{@prefix}&cHold the item type you want to protect."
+            stop
+        set {_kind} to "%type of player's tool%"
+        if {usefulskripts::itemlock::%uuid of player%::%{_kind}%} is true:
+            delete {usefulskripts::itemlock::%uuid of player%::%{_kind}%}
+            send "{@prefix}&aUnlocked drops for %{_kind}%."
+        else:
+            set {usefulskripts::itemlock::%uuid of player%::%{_kind}%} to true
+            send "{@prefix}&eLocked Q-drops for %{_kind}%."
+
+on drop:
+    set {_kind} to "%type of event-item%"
+    if {usefulskripts::itemlock::%uuid of player%::%{_kind}%} is true:
+        cancel event
+        send "{@prefix}&cThat item type is locked. Use /itemlock while holding it to unlock."

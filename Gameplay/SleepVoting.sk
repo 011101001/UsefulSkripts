@@ -1,12 +1,38 @@
 # ============================================================
-# SleepVoting
-# STATUS: PLANNED — NOT IMPLEMENTED
-# PURPOSE: Skip the night when enough players are sleeping.
+# UsefulSkripts - SleepVoting
+# Skip the night when enough players in one world sleep.
+# Status: Initial implementation - not server-tested
+# Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
-# This file is a roadmap placeholder, NOT a working Skript.
-# No commands, events, or gameplay changes are implemented yet.
-# TODO:
-# - Implement the core feature safely.
-# - Add configuration, permissions, and helpful messages.
-# - Test on a compatible Skript/Minecraft server.
-# - Document setup and limitations before release.
+
+options:
+    required-percent: 50
+    cooldown: 10 seconds
+    prefix: &8[&9Sleep&8] &7
+
+# Counts online non-spectator players in the bed's world only.
+# No external addons are required.
+on bed enter:
+    set {_world} to world of player
+    wait 2 ticks
+    if player is not sleeping:
+        stop
+    if {usefulskripts::sleep::last::%{_world}%} is set:
+        if difference between now and {usefulskripts::sleep::last::%{_world}%} < {@cooldown}:
+            stop
+
+    set {_eligible} to 0
+    set {_asleep} to 0
+    loop all players:
+        if world of loop-player is {_world}:
+            if loop-player's gamemode is not spectator:
+                add 1 to {_eligible}
+                if loop-player is sleeping:
+                    add 1 to {_asleep}
+    if {_eligible} = 0:
+        stop
+    if {_asleep} * 100 >= {_eligible} * {@required-percent}:
+        set {usefulskripts::sleep::last::%{_world}%} to now
+        set time of {_world} to 6:00
+        set weather of {_world} to clear
+        broadcast "{@prefix}&aEnough players slept. Good morning!" in {_world}

@@ -1,8 +1,10 @@
-# PlayerUtilities Skripts
+# PlayerUtilities
 
-## Starting lineup
+Initial script implementations. **Not tested on a live Minecraft server.** Please run `/sk reload <filename>` on a staging server and fix any reported errors before enabling them for players.
 
-- **[`DurabilityAlerts.sk`](./DurabilityAlerts.sk)** — Warn players when tools or armor reach a low durability threshold. **Planned.**
-- **[`DeathLocation.sk`](./DeathLocation.sk)** — Let players retrieve their most recent death coordinates. **Planned.**
+## Files
 
-> **Status note:** Planned .sk files are intentionally comment-only placeholders, not functioning Skripts.
+- [`DurabilityAlerts.sk`](./DurabilityAlerts.sk) - Warns when a damaged item reaches the configured remaining durability. Requires Skript 2.10+.
+- [`DeathLocation.sk`](./DeathLocation.sk) - Stores death coordinates and recalls them with /deathloc. Requires Skript 2.10+.
+
+See [repository README](../README.md) for install and safety notes.

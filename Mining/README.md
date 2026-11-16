@@ -1,10 +1,10 @@
-# Mining Skripts
+# Mining
 
-## Starting lineup
+Initial script implementations. **Not tested on a live Minecraft server.** Please run `/sk reload <filename>` on a staging server and fix any reported errors before enabling them for players.
 
-- **[`telepathy.sk`](./telepathy.sk)** — Automatically collect mined item drops into the player's inventory. **Provided source.**
-- **[`universal_fortune.sk`](./universal_fortune.sk)** — Apply ore-style Fortune multipliers to additional ordinary blocks. **Provided source.**
+## Files
 
-> **Status note:** Planned .sk files are intentionally comment-only placeholders, not functioning Skripts.
+- [`Telepathy.sk`](./Telepathy.sk) - Directly collects player-owned block drops when room is available. Requires Skript 2.10+.
+- [`UniversalFortune.sk`](./UniversalFortune.sk) - Applies a custom ore-style Fortune multiplier to ordinary drops. Requires Skript 2.10+.
 
-The two mining files are imported from the original ZIP and have not been tested here against a live Minecraft server.
+See [repository README](../README.md) for install and safety notes.

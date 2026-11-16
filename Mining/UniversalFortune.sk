@@ -1,21 +1,20 @@
-# =========================================================
-# UNIVERSAL FORTUNE DROP ENGINE (SEPARATE SKRIPT)
-# Put this file next to mining_pickaxes.sk in plugins/Skript/scripts/.
+# ============================================================
+# UsefulSkripts - Universal Fortune
+# Adds an ore-style Fortune multiplier to ordinary block drops.
+# Status: Updated source - not server-tested
+# Requires: Skript 2.10+ and compatible server
 #
-# - ALL tools with the real Fortune enchantment use this system.
-# - Any ordinary droppable block can benefit (logs, stone, dirt, ores...).
-# - A vanilla-ORE-STYLE Fortune roll is used for each block's drops:
-#   multiplier = max(1, random integer from 0 to (Fortune + 1)).
-#   This is the classic ore-style distribution: Fortune III averages 2.2x.
-# - It replaces vanilla item drops so Fortune is NOT applied twice.
-# - telepathy.sk collects these custom Fortune drops directly when enabled.
-#   The scripts communicate through a temporary drop-owner variable.
-# - Silk Touch keeps its normal behavior, without Fortune multiplication.
-# - Important: special loot tables (e.g. flint, crop seeds) are not
-#   identical to every vanilla Fortune rule; this uses ORE-STYLE scaling.
-# - Container / special block entities are excluded for anti-dupe safety.
-# - Experience is left to Minecraft (only item drops are replaced).
-# =========================================================
+# - Applies to actual Fortune enchants on held tools.
+# - Silk Touch continues to use vanilla drops.
+# - Normal drops are simulated with Fortune removed, then multiplied.
+# - Ore-style scaling does NOT reproduce every vanilla loot table.
+# - Container and special block entities are excluded to reduce risk.
+# - Experience drops are not changed.
+# - Telepathy.sk detects scripted Fortune item spawns via a short-lived
+#   owner marker; the Fortune script also works alone.
+# - Optional legacy setting: {mining::config::fortune-max}.
+# - Test in a disposable world before enabling on a live server.
+# ============================================================
 
 on break with priority highest:
     if event is cancelled:
@@ -27,13 +26,13 @@ on break with priority highest:
     if {_tool} is air:
         stop
 
-    # Actual Fortune enchant level, on ANY enchanted item, not only picks.
+    # Read the actual Fortune level from the tool.
     set {_rawFortune} to level of fortune of {_tool}
     if {_rawFortune} is not set:
         set {_rawFortune} to 0
     set {_fortune} to {_rawFortune}
 
-    # Cap is controlled by the option in mining_pickaxes.sk.
+    # Optional external cap, retained for older mining setups.
     if {mining::config::fortune-max} is set:
         if {_fortune} > {mining::config::fortune-max}:
             set {_fortune} to {mining::config::fortune-max}
@@ -53,9 +52,8 @@ on break with priority highest:
     if "%type of event-block%" contains "shulker box":
         stop
 
-    # Sample correct NORMAL drops with the same tool but WITHOUT Fortune.
-    # Skript clones item values when putting them in variables, so the
-    # original player's held tool/enchantments are NOT modified.
+    # Clone the held tool and remove Fortune from the drop simulation.
+    # The player's actual held tool is not intentionally modified.
     set {_normalTool} to {_tool}
     if {_fortune} > 0:
         set level of fortune of {_normalTool} to 0
@@ -64,7 +62,7 @@ on break with priority highest:
     if size of {_drops::*} is 0:
         stop
 
-    # Keep the original XP drop but replace its ITEM drops.
+    # Keep vanilla XP, but replace item drops to prevent double Fortune.
     cancel drops of items
 
     set {_multiplier} to 1
@@ -74,10 +72,8 @@ on break with priority highest:
         if {_multiplier} < 1:
             set {_multiplier} to 1
 
-    # The item-spawn event does not otherwise know who owns scripted
-    # drops. This marker is set only while this break emits its drops,
-    # and is read by the separate telepathy.sk handler synchronously.
-    # Fortune still works by itself when telepathy.sk is absent.
+    # This marker exists only while the scripted drops are emitted.
+    # Telepathy reads it synchronously for direct inventory pickup.
     set {telepathy::fortune-emitting-player} to player
 
     loop {_drops::*}:
@@ -96,8 +92,7 @@ on break with priority highest:
             set {_chunk} to {_original}
             set item amount of {_chunk} to {_size}
 
-            # Spawn normal world drops. telepathy.sk cancels the spawn
-            # and inserts the stack if that player has inventory space.
+            # Spawn normal drops. Telepathy may collect them if enabled.
             drop {_chunk} at location of event-block
 
             remove {_size} from {_remaining}

@@ -1,12 +1,75 @@
 # ============================================================
-# TreeCapitator
-# STATUS: PLANNED — NOT IMPLEMENTED
-# PURPOSE: Break connected natural tree logs using a single trunk break.
+# UsefulSkripts - TreeCapitator
+# Sneak and break a log with an axe to cut connected logs.
+# Status: Initial implementation - not server-tested
+# Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
-# This file is a roadmap placeholder, NOT a working Skript.
-# No commands, events, or gameplay changes are implemented yet.
-# TODO:
-# - Implement the core feature safely.
-# - Add configuration, permissions, and helpful messages.
-# - Test on a compatible Skript/Minecraft server.
-# - Document setup and limitations before release.
+
+options:
+    max-extra-logs: 48
+    max-distance: 9
+
+# Permission is required because scripted block breaking may not
+# respect every land-protection plugin. Only grant it where safe.
+# This feature does not consume extra axe durability.
+on break:
+    if event is cancelled:
+        stop
+    if player's gamemode is creative:
+        stop
+    if player does not have permission "usefulskripts.treecapitator":
+        stop
+    if player is not sneaking:
+        stop
+    if player's tool is not an axe:
+        stop
+    if event-block is not oak log and event-block is not spruce log and event-block is not birch log and event-block is not jungle log and event-block is not acacia log and event-block is not dark oak log and event-block is not mangrove log and event-block is not cherry log and event-block is not pale oak log:
+        stop
+    if {usefulskripts::treecap::busy::%uuid of player%} is true:
+        stop
+
+    set {_origin} to location of event-block
+    set {_kind} to type of event-block
+
+    # Requiring nearby leaves reduces accidental damage to wooden builds.
+    set {_leaves} to false
+    loop blocks in radius 4 around {_origin}:
+        if "%type of loop-block%" contains "leaves":
+            set {_leaves} to true
+            stop loop
+    if {_leaves} is false:
+        stop
+
+    # Respect a cancelled original block break as far as possible.
+    wait 1 tick
+    if block at {_origin} is not air:
+        stop
+
+    set {usefulskripts::treecap::busy::%uuid of player%} to true
+    set {_queue::1} to {_origin}
+    set {_head} to 1
+    set {_tail} to 1
+    set {_count} to 0
+    set {_seen::%{_origin}%} to true
+
+    # Bounded breadth-first scan. Only directly connected matching logs
+    # are broken; the distance and count settings limit the work.
+    while {_head} <= {_tail}:
+        if {_count} >= {@max-extra-logs}:
+            stop loop
+        set {_current} to {_queue::%{_head}%}
+        add 1 to {_head}
+        loop blocks in radius 1.75 around {_current}:
+            if type of loop-block is {_kind}:
+                set {_loc} to location of loop-block
+                if distance between {_loc} and {_origin} <= {@max-distance}:
+                    if {_seen::%{_loc}%} is not set:
+                        set {_seen::%{_loc}%} to true
+                        add 1 to {_tail}
+                        set {_queue::%{_tail}%} to {_loc}
+                        break loop-block naturally using player's tool
+                        add 1 to {_count}
+                        if {_count} >= {@max-extra-logs}:
+                            stop loop
+
+    delete {usefulskripts::treecap::busy::%uuid of player%}

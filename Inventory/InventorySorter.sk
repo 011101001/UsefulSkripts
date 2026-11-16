@@ -1,12 +1,37 @@
 # ============================================================
-# InventorySorter
-# STATUS: PLANNED — NOT IMPLEMENTED
-# PURPOSE: Sort inventory items and consolidate matching stacks.
+# UsefulSkripts - InventorySorter
+# Sort the 36 player storage and hotbar slots by item type.
+# Status: Initial implementation - not server-tested
+# Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
-# This file is a roadmap placeholder, NOT a working Skript.
-# No commands, events, or gameplay changes are implemented yet.
-# TODO:
-# - Implement the core feature safely.
-# - Add configuration, permissions, and helpful messages.
-# - Test on a compatible Skript/Minecraft server.
-# - Document setup and limitations before release.
+
+options:
+    prefix: &8[&bSort&8] &7
+
+# Sorts stacks alphabetically by material without touching armor,
+# offhand or crafting slots. Item metadata, enchantments and stack
+# quantities are preserved. Identical stacks are not merged.
+command /sort:
+    executable by: players
+    cooldown: 3 seconds
+    trigger:
+        delete {_stacks::*}
+        loop 36 times:
+            set {_index} to loop-number - 1
+            set {_stack} to slot {_index} of player
+            if {_stack} is not air:
+                add {_stack} to {_stacks::*}
+        if size of {_stacks::*} is 0:
+            send "{@prefix}&eYour inventory is empty."
+            stop
+
+        sort {_stacks::*} based on "%type of input%"
+        loop 36 times:
+            set {_index} to loop-number - 1
+            clear slot {_index} of player
+
+        set {_index} to 0
+        loop {_stacks::*}:
+            set slot {_index} of player to loop-value
+            add 1 to {_index}
+        send "{@prefix}&aInventory sorted by item type."

@@ -1,12 +1,32 @@
 # ============================================================
-# EntityCleanup
-# STATUS: PLANNED — NOT IMPLEMENTED
-# PURPOSE: Safely remove abandoned ground items with warnings and exemptions.
+# UsefulSkripts - EntityCleanup
+# Staff-only cleanup of older dropped ground items.
+# Status: Initial implementation - not server-tested
+# Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
-# This file is a roadmap placeholder, NOT a working Skript.
-# No commands, events, or gameplay changes are implemented yet.
-# TODO:
-# - Implement the core feature safely.
-# - Add configuration, permissions, and helpful messages.
-# - Test on a compatible Skript/Minecraft server.
-# - Document setup and limitations before release.
+
+options:
+    prefix: &8[&6Cleanup&8] &7
+    warning-seconds: 10
+    minimum-age: 60 seconds
+
+# This is a manual command, not an automatic repeating cleanup.
+# Recently dropped items are exempt. Named entities and mobs
+# are untouched because only dropped item entities are scanned.
+command /cleardrops:
+    permission: usefulskripts.admin.cleardrops
+    permission message: &cYou do not have permission to use this command.
+    trigger:
+        if {usefulskripts::cleanup::running} is true:
+            send "{@prefix}&eA cleanup is already pending."
+            stop
+        set {usefulskripts::cleanup::running} to true
+        broadcast "{@prefix}&eOld ground items will be cleaned in {@warning-seconds} seconds."
+        wait {@warning-seconds} seconds
+        set {_count} to 0
+        loop all dropped items:
+            if time lived of loop-entity >= {@minimum-age}:
+                kill loop-entity
+                add 1 to {_count}
+        delete {usefulskripts::cleanup::running}
+        broadcast "{@prefix}&aRemoved %{_count}% old dropped item entities."

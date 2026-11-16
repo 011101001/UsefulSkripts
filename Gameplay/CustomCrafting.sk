@@ -1,12 +1,26 @@
 # ============================================================
-# CustomCrafting
-# STATUS: PLANNED — NOT IMPLEMENTED
-# PURPOSE: Add configurable crafting recipes.
+# UsefulSkripts - CustomCrafting
+# Adds a sample custom shaped recipe through SkBee.
+# Status: Initial implementation - not server-tested
+# Requires: Skript 2.10+ and a compatible Minecraft server; SkBee 3.0+
 # ============================================================
-# This file is a roadmap placeholder, NOT a working Skript.
-# No commands, events, or gameplay changes are implemented yet.
-# TODO:
-# - Implement the core feature safely.
-# - Add configuration, permissions, and helpful messages.
-# - Test on a compatible Skript/Minecraft server.
-# - Document setup and limitations before release.
+
+options:
+    recipe-id: usefulskripts:name_tag
+    recipe-name: &aCrafted Name Tag
+
+# Requires SkBee 3.0+ in addition to Skript.
+# Edit the recipe ID, result, shape and ingredients to customize.
+# Sample recipe: paper above string above an iron ingot -> name tag.
+# Recipe registration runs on load. Players may need to reconnect
+# after a recipe changes for it to appear in their recipe book.
+on load:
+    register shaped recipe:
+        id: "{@recipe-id}"
+        result: name tag named "{@recipe-name}"
+        shape: " P ", " S ", " I "
+        category: "misc"
+        ingredients:
+            set ingredient of "P" to paper
+            set ingredient of "S" to string
+            set ingredient of "I" to iron ingot
