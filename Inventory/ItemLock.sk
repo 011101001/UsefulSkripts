@@ -1,15 +1,6 @@
-# ============================================================
-# UsefulSkripts - ItemLock
-# Lock or unlock dropping items by material for each player.
-# Requires: Skript 2.10+ and a compatible Minecraft server
-# ============================================================
-
 options:
     prefix: &8[&6ItemLock&8] &7
 
-# /itemlock toggles protection for the held material, not one exact
-# item stack. All items of that material are protected from Q-dropping.
-# Inventory moves, death drops and external plugin removals are not blocked.
 command /itemlock:
     executable by: players
     trigger:

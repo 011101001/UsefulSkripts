@@ -1,16 +1,6 @@
-# ============================================================
-# UsefulSkripts - InventorySorter
-# Sort the main player inventory without moving the hotbar.
-# Requires: Skript 2.10+ and a compatible Minecraft server
-# ============================================================
-
 options:
     prefix: &8[&bSort&8] &7
 
-# Only inventory slots 9-35 are sorted (three storage rows).
-# Hotbar slots 0-8 are never read, cleared, or rewritten.
-# Armor, offhand, and crafting slots are left untouched.
-# Item amounts, metadata and enchantments are retained.
 command /sort:
     executable by: players
     cooldown: 3 seconds

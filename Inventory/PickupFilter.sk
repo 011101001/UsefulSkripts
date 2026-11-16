@@ -1,19 +1,6 @@
-# ============================================================
-# UsefulSkripts - PickupFilter
-# Keep selected item types on the ground instead of picking them up.
-# ============================================================
-
 options:
     prefix: &8[&3PickupFilter&8] &7
 
-# /pickupfilter               - Toggle the material in your hand.
-# /pickupfilter diamond       - Toggle diamonds without holding any.
-# /pickupfilter diamond sword - Toggle diamond swords by typed name.
-# /pickupfilter list          - Show your current blacklist.
-# /pickupfilter clear         - Remove all your blacklist entries.
-#
-# Typed names are checked against Skript item type aliases. Unknown
-# names are rejected and do not create invalid filters.
 command /pickupfilter [<text>]:
     executable by: players
     trigger:
@@ -50,8 +37,6 @@ command /pickupfilter [<text>]:
             set {usefulskripts::pickupfilter::%uuid of player%::%{_material}%} to true
             send "{@prefix}&ePickup blocked: &f%{_material}%"
 
-# Blacklisted items remain as physical entities and can still be
-# picked up by other players. This only handles ordinary pickup.
 on player pickup:
     set {_material} to "%type of event-item%"
     if {usefulskripts::pickupfilter::%uuid of player%::%{_material}%} is true:

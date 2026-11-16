@@ -1,18 +1,6 @@
-# ============================================================
-# UsefulSkripts | AutoRefill
-# Refill a depleted hotbar stack from the main inventory.
-#
-# Edit the options below to configure this script.
-# Place this file in plugins/Skript/scripts and reload it.
-# ============================================================
-
 options:
     prefix: &8[&aAutoRefill&8] &7
 
-# Toggle with /autorefill. Only refills after placing blocks or
-# consuming food. Copies an existing matching material stack from
-# storage slots 9-35 into the vacated hotbar slot.
-# This does not craft or create new items.
 command /autorefill [<text>]:
     executable by: players
     trigger:
