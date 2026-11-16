@@ -1,22 +1,7 @@
 # =========================================================
-# TELEPATHY - STANDALONE /telepathy COMMAND
-# =========================================================
-# /telepathy       toggle on/off
-# /telepathy on    enable
-# /telepathy off   disable
-#
-# Reliable pickup: newly spawned mined items go DIRECTLY into the
-# player's inventory when the whole stack fits. This avoids both
-# Minecraft's pickup delay and leaving drops behind while sprinting.
-#
-# If there is insufficient space, the actual item entity is left
-# intact and follows the player briefly, with zero pickup delay.
-# It is never deleted unless the inventory transfer can succeed.
-#
-# The universal_fortune.sk file marks its own spawned drops with
-# {telepathy::fortune-emitting-player}, so they are captured even
-# if normal block-drop location/timing matching doesn't work.
-# No telepathy enchant, pickaxe level, or lore is required.
+# TELEPATHY
+# Newly spawned mined items go DIRECTLY into the
+# player's inventory when the whole stack fits.
 # =========================================================
 
 options:
