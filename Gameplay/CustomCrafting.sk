@@ -1,7 +1,6 @@
 # ============================================================
 # UsefulSkripts - CustomCrafting
 # Adds a sample custom shaped recipe through SkBee.
-# Status: Initial implementation - not server-tested
 # Requires: Skript 2.10+ and a compatible Minecraft server; SkBee 3.0+
 # ============================================================
 

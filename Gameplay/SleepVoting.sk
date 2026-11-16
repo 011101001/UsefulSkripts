@@ -1,7 +1,6 @@
 # ============================================================
 # UsefulSkripts - SleepVoting
 # Skip the night when enough players in one world sleep.
-# Status: Initial implementation - not server-tested
 # Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
 
