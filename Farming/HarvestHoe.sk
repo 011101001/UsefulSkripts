@@ -21,7 +21,7 @@ on break:
         stop
     if player is not sneaking:
         stop
-    if player's tool is not wooden hoe or stone hoe or iron hoe or golden hoe or diamond hoe or netherite hoe:
+    if player's tool is not wooden hoe or stone hoe or copper hoe or iron hoe or golden hoe or diamond hoe or netherite hoe:
         stop
     if {usefulskripts::harvesthoe::busy::%uuid of player%} is true:
         stop
