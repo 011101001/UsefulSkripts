@@ -10,7 +10,7 @@ options:
 # The last location persists across reloads and server restarts
 # through Skript's variable storage.
 on death of player:
-    set {usefulskripts::deathloc::%uuid of player%} to location of player
+    set {usefulskripts::deathloc::%uuid of player%} to location of victim
 
 command /deathloc:
     executable by: players
