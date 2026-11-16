@@ -1,8 +1,3 @@
-# ============================================================
-# UsefulSkripts - TreeCapitator
-# Sneak and break a log with an axe to chop connected logs.
-# ============================================================
-
 options:
     max-extra-logs: 48
     max-distance: 9
@@ -11,17 +6,6 @@ options:
     show-summary: true
     prefix: &8[&6TreeCapitator&8] &7
 
-# Sneak with an axe to activate. Logs must be directly connected
-# and the same type as the original log. Only a bounded area is scanned.
-#
-# By default there is no permission or leaves requirement, so the
-# feature works on ordinary logs without extra setup.
-#
-# For protected servers set require-permission to true and give players
-# usefulskripts.treecapitator. Scripted breaks may bypass some claim
-# plugins, so test the integration before enabling public access.
-#
-# Additional axe durability is not consumed by this script.
 on break:
     if event is cancelled:
         stop
@@ -37,7 +21,6 @@ on break:
     if {usefulskripts::treecap::busy::%uuid of player%} is true:
         stop
 
-    # Only support the regular Overworld log types.
     if event-block is oak log or spruce log or birch log or jungle log or acacia log or dark oak log or mangrove log or cherry log or pale oak log:
         set {_kind} to type of event-block
     else:
@@ -54,8 +37,6 @@ on break:
         if {_leaves} is false:
             stop
 
-    # Run after vanilla finishes the first break. A cancelled or
-    # protected original block is not followed by extra breaks.
     wait 1 tick
     if block at {_origin} is not air:
         stop
@@ -69,8 +50,6 @@ on break:
     set {_tail} to 1
     set {_count} to 0
 
-    # Scan the six faces and diagonals in a small radius, extending
-    # from the original log through each connected matching log.
     while {_head} <= {_tail}:
         if {_count} >= {@max-extra-logs}:
             stop loop

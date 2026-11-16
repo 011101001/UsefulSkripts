@@ -1,19 +1,7 @@
-# ============================================================
-# UsefulSkripts | HarvestHoe
-# Sneak and harvest mature nearby crops with a hoe.
-#
-# Edit the options below to configure this script.
-# Place this file in plugins/Skript/scripts and reload it.
-# ============================================================
-
 options:
     radius: 2
     max-extra-crops: 24
 
-# Permission: usefulskripts.harvesthoe
-# Crops broken in the extra area are replanted for free one tick later.
-# This action does not charge extra hoe durability or consume seeds.
-# Protection-plugin compatibility must be checked before granting access.
 on break:
     if event is cancelled:
         stop
