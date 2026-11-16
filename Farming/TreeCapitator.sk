@@ -20,7 +20,7 @@ on break:
         stop
     if player is not sneaking:
         stop
-    if player's tool is not wooden axe or stone axe or iron axe or golden axe or diamond axe or netherite axe:
+    if player's tool is not wooden axe or stone axe or copper axe or iron axe or golden axe or diamond axe or netherite axe:
         stop
     if event-block is not oak log or spruce log or birch log or jungle log or acacia log or dark oak log or mangrove log or cherry log or pale oak log:
         stop
