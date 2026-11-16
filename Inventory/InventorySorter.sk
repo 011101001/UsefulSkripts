@@ -1,36 +1,37 @@
 # ============================================================
 # UsefulSkripts - InventorySorter
-# Sort the 36 player storage and hotbar slots by item type.
+# Sort the main player inventory without moving the hotbar.
 # Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
 
 options:
     prefix: &8[&bSort&8] &7
 
-# Sorts stacks alphabetically by material without touching armor,
-# offhand or crafting slots. Item metadata, enchantments and stack
-# quantities are preserved. Identical stacks are not merged.
+# Only inventory slots 9-35 are sorted (three storage rows).
+# Hotbar slots 0-8 are never read, cleared, or rewritten.
+# Armor, offhand, and crafting slots are left untouched.
+# Item amounts, metadata and enchantments are retained.
 command /sort:
     executable by: players
     cooldown: 3 seconds
     trigger:
         delete {_stacks::*}
-        loop 36 times:
-            set {_index} to loop-number - 1
+        loop 27 times:
+            set {_index} to loop-number + 8
             set {_stack} to slot {_index} of player
             if {_stack} is not air:
                 add {_stack} to {_stacks::*}
         if size of {_stacks::*} is 0:
-            send "{@prefix}&eYour inventory is empty."
+            send "{@prefix}&eYour main inventory is empty."
             stop
 
         sort {_stacks::*} based on "%type of input%"
-        loop 36 times:
-            set {_index} to loop-number - 1
+        loop 27 times:
+            set {_index} to loop-number + 8
             clear slot {_index} of player
 
-        set {_index} to 0
+        set {_index} to 9
         loop {_stacks::*}:
             set slot {_index} of player to loop-value
             add 1 to {_index}
-        send "{@prefix}&aInventory sorted by item type."
+        send "{@prefix}&aMain inventory sorted. Your hotbar was left alone."
