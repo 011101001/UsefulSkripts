@@ -1,7 +1,6 @@
 # ============================================================
 # UsefulSkripts - DeathLocation
 # Remember each player's last death coordinates.
-# Status: Initial implementation - not server-tested
 # Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
 

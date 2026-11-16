@@ -1,7 +1,6 @@
 # ============================================================
 # UsefulSkripts - DurabilityAlerts
 # Warn a player when a damaged item is nearly broken.
-# Status: Initial implementation - not server-tested
 # Requires: Skript 2.10+ and a compatible Minecraft server
 # ============================================================
 
