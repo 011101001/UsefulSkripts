@@ -1,7 +1,6 @@
 # ============================================================
 # UsefulSkripts - Universal Fortune
 # Adds an ore-style Fortune multiplier to ordinary block drops.
-# Requires: Skript 2.10+ and compatible server
 # ============================================================
 
 on break with priority highest:
