@@ -1,10 +1,14 @@
-# ServerAdministration
+# Server Administration
 
-Initial script implementations. **Not tested on a live Minecraft server.** Please run `/sk reload <filename>` on a staging server and fix any reported errors before enabling them for players.
+Staff tools with dedicated permissions.
 
-## Files
+| Script | Feature | Permission |
+| --- | --- | --- |
+| [EntityCleanup.sk](./EntityCleanup.sk) | Clear older dropped items after warning players | `usefulskripts.admin.cleardrops` |
+| [ChatClear.sk](./ChatClear.sk) | Push prior public chat out of view | `usefulskripts.admin.clearchat` |
 
-- [`EntityCleanup.sk`](./EntityCleanup.sk) - Runs a permission-gated /cleardrops command with a warning and item age check. Requires Skript 2.13+.
-- [`ChatClear.sk`](./ChatClear.sk) - Runs permission-gated /clearchat with blank lines and staff attribution. Requires Skript 2.10+.
+Commands: `/cleardrops` and `/clearchat`.
 
-See [repository README](../README.md) for install and safety notes.
+These actions affect players or world items. Review their options and assign the permissions only to authorized staff.
+
+[Back to the main README](../README.md).
