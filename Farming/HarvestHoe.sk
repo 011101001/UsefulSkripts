@@ -21,11 +21,11 @@ on break:
         stop
     if player is not sneaking:
         stop
-    if player's tool is not a hoe:
+    if player's tool is not wooden hoe or stone hoe or golden hoe or diamond hoe or netherite hoe:
         stop
     if {usefulskripts::harvesthoe::busy::%uuid of player%} is true:
         stop
-    if event-block is not wheat and event-block is not carrots and event-block is not potatoes and event-block is not beetroots:
+    if event-block is not wheat or carrots or potatoes or beetroots:
         stop
     if age of event-block is not maximum age of event-block:
         stop
