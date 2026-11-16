@@ -8,8 +8,8 @@
 
 options:
     prefix: &8[&7AFK&8] &7
-    idle-minutes: 5
-    movement-check-seconds: 10
+    idle-minutes: 5 minutes
+    movement-check-seconds: 10 seconds
 
 # An AFK marker is public and informational only.
 # AFK detection uses low-frequency status polling and throttled
@@ -56,6 +56,6 @@ every 1 minute:
         if {usefulskripts::afk::enabled::%uuid of loop-player%} is not true:
             if {usefulskripts::afk::activity::%uuid of loop-player%} is not set:
                 set {usefulskripts::afk::activity::%uuid of loop-player%} to now
-            if difference between now and {usefulskripts::afk::activity::%uuid of loop-player%} >= {@idle-minutes} minutes:
+            if difference between now and {usefulskripts::afk::activity::%uuid of loop-player%} >= {@idle-minutes}:
                 set {usefulskripts::afk::enabled::%uuid of loop-player%} to true
                 broadcast "{@prefix}&f%loop-player% &7is now AFK."
